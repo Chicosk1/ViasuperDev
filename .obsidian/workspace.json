@@ -1,0 +1,209 @@
+{
+  "main": {
+    "id": "6ea91dcb54742e46",
+    "type": "split",
+    "children": [
+      {
+        "id": "ce453aa5d5a3f53d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f4c713564d261274",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "Nova aba"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "54f22687080f6e66",
+    "type": "split",
+    "children": [
+      {
+        "id": "901bc909bb4a841f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "42423eaf6bf51823",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de arquivos"
+            }
+          },
+          {
+            "id": "eb04cff4ecd9a359",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Procurar"
+            }
+          },
+          {
+            "id": "98986a71b7c60e87",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "1e74a633b8018b62",
+    "type": "split",
+    "children": [
+      {
+        "id": "4e6a42f43f30f079",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "45f6b14ef1afad76",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Links inversos"
+            }
+          },
+          {
+            "id": "e4027c2a4089f88e",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Links de saída"
+            }
+          },
+          {
+            "id": "fff0d9d03623ff96",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "ef44c0e2ad4765d1",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas as propriedades"
+            }
+          },
+          {
+            "id": "38ff1b8694ae023d",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "02_Processos/PROC-001-geracao-nota-cred-deb.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Sumário de PROC-001-geracao-nota-cred-deb"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "daily-notes:Abrir a nota de hoje": false,
+      "templates:Inserir modelo": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Criar nova base": false,
+      "templater-obsidian:Templater": false
+    }
+  },
+  "active": "f4c713564d261274",
+  "lastOpenFiles": [
+    "02_Processos/PROC-002-controle-de-produtos.md",
+    "02_Processos/PROC-001-gerar-notas-de-credito-e-debito.md",
+    "99_AGs/backlog/AG-32021-gerar-notas-de-credito-e-debito-em-massa-2-de-2.md",
+    "99_AGs/backlog/AG-31945-gerar-notas-de-credito-e-debito-em-massa-1-de-2.md",
+    "99_AGs/backlog/AG-30193-melhorar-performance-da-rotina-de-controle-de-produtos-f7.md",
+    "00_Templates_e_Scripts/_scripts/viasuperdev/__pycache__/vault_writer.cpython-314.pyc",
+    "00_Templates_e_Scripts/_scripts/templates/ag.j2",
+    "00_Templates_e_Scripts/_scripts/templates/processo.j2",
+    "00_Templates_e_Scripts/_meta/meta-contexto-llm.md",
+    "00_Templates_e_Scripts/_meta",
+    "05_Arquiteturas/infra",
+    "05_Arquiteturas/database",
+    "00_Templates_e_Scripts/_scripts/tests/__pycache__/test_logging_config.cpython-314-pytest-7.4.4.pyc",
+    "00_Templates_e_Scripts/_scripts/tests/test_logging_config.py",
+    "00_Templates_e_Scripts/_scripts/tests/__pycache__/test_vault_writer.cpython-314-pytest-7.4.4.pyc",
+    "00_Templates_e_Scripts/_scripts/viasuperdev/__pycache__/parsers.cpython-314.pyc",
+    "99_AGs/backlog/AG-31945-gerar-notas-de-credito-e-debito.md",
+    "02_Processos/PROC-001-gerar-notas-de-credito-e-debido.md",
+    "02_Processos/PROC-001-gerar-notas-de-credito-e-debito-em-massa-1-de-2.md",
+    "00_Templates_e_Scripts/_templates/Template_AG.md",
+    "CLAUDE.md",
+    "02_Processos/PROC-002-melhorar-performance-da-rotina-de-controle-de-produtos-f7.md",
+    "00_Templates_e_Scripts/_scripts/README.md",
+    "99_AGs/doing/Untitled.md",
+    "02_Processos/PROC-001-gerar-notas-credito-debito.md"
+  ]
+}

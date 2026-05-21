@@ -51,7 +51,8 @@ Lista de referências — os detalhes ficam em `03_Regras_Negocio/`:
 **Linguagem / Framework:** Delphi / FireDAC  
 **Unit principal:** `uNomeDaUnit.pas`  
 **Endpoint (se aplicável):** `POST /api/v1/rota`  
-**Tabelas envolvidas:** `TABELA_A`, `TABELA_B`  
+**Tabelas envolvidas:** `TABELA_A`, `TABELA_B`
+**Consultas envolvidas(se aplicável):**
 **Arquitetura de referência:** [[ARQ-001-nome-da-decisao]]
 
 ## 6. Casos de Falha

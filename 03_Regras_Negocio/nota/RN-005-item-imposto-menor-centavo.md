@@ -18,8 +18,8 @@ tags:
 processos_relacionados:
   - PROC-001
 padroes_relacionados: []
-data_criacao: "2025-05-21"
-data_revisao: "2025-05-21"
+data_criacao: "2026-05-21"
+data_revisao: "2026-05-21"
 ---
 
 # Itens com imposto calculado inferior a R$ 0,01 não são incluídos na nota gerada
@@ -61,4 +61,4 @@ Nenhum parâmetro de configuração — regra de negócio fixa.
 
 | Data | Versão | Mudança |
 |---|---|---|
-| 2025-05-21 | 1.0 | Criação a partir da [AG-32021](https://nimitz.atlassian.net/browse/AG-32021) (critério 3.6) |
+| 2026-05-21 | 1.0 | Criação a partir da [AG-32021](https://nimitz.atlassian.net/browse/AG-32021) (critério 3.6) |

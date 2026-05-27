@@ -29,9 +29,9 @@ Por que esta regra existe — o problema de negócio ou fiscal que ela resolve.
 
 ## 3. Condição (Se / Então)
 
-**Se:** condição que dispara a regra.  
-**Então:** o que o sistema deve fazer.  
-**Senão:** comportamento quando a condição não é atendida *(se aplicável)*.
+- **Se:** condição que dispara a regra.  
+- **Então:** o que o sistema deve fazer.  
+- **Senão:** comportamento quando a condição não é atendida *(se aplicável)*.
 
 ## 4. Exemplos
 

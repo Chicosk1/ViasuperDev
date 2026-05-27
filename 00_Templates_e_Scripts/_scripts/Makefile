@@ -73,3 +73,21 @@ help:
 	@echo "Comandos disponíveis:"
 	@grep -E '^##' Makefile | sed 's/## /  /'
 	@echo ""
+
+.PHONY: index index-full index-stats query
+
+index:
+	python -m viasuperdev.indexer --only kb
+
+index-full:
+	python -m viasuperdev.indexer --only kb --full
+
+index-dry:
+	python -m viasuperdev.indexer --only kb --dry-run
+
+index-stats:
+	python -m viasuperdev.indexer --stats
+
+# Uso: make query Q="base IBS ajustar"
+query:
+	@python -m viasuperdev.indexer --query "$(Q)"

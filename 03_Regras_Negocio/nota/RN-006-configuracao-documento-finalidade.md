@@ -15,9 +15,10 @@ tags:
   - validacao
 processos_relacionados:
   - PROC-001
-padroes_relacionados: []
-data_criacao: "2025-05-21"
-data_revisao: "2025-05-21"
+padroes_relacionados:
+  - PT-002
+data_criacao: "2026-05-21"
+data_revisao: "2026-05-21"
 ---
 
 # Configuração de documento deve ter finalidade Nota de Crédito ou Nota de Débito
@@ -68,4 +69,4 @@ Nenhuma exceção prevista.
 
 | Data | Versão | Mudança |
 |---|---|---|
-| 2025-05-21 | 1.0 | Criação a partir da [AG-32021](https://nimitz.atlassian.net/browse/AG-32021) (critérios 3.3 e 3.8) |
+| 2026-05-21 | 1.0 | Criação a partir da [AG-32021](https://nimitz.atlassian.net/browse/AG-32021) (critérios 3.3 e 3.8) |

@@ -18,8 +18,8 @@ tags:
 processos_relacionados:
   - PROC-001
 padroes_relacionados: []
-data_criacao: "2025-05-21"
-data_revisao: "2025-05-21"
+data_criacao: "2026-05-21"
+data_revisao: "2026-05-21"
 ---
 
 # Cálculo automático da Base IBS/CBS a Ajustar
@@ -73,4 +73,4 @@ Nenhum parâmetro de configuração — cálculo fixo baseado nos valores da bai
 
 | Data | Versão | Mudança |
 |---|---|---|
-| 2025-05-21 | 1.0 | Criação a partir da [AG-31945](https://nimitz.atlassian.net/browse/AG-31945) (critérios 3.7 e 3.8) |
+| 2026-05-21 | 1.0 | Criação a partir da [AG-31945](https://nimitz.atlassian.net/browse/AG-31945) (critérios 3.7 e 3.8) |

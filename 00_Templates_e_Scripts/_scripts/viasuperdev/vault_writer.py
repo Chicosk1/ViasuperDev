@@ -54,7 +54,7 @@ def slugify(text: str) -> str:
 
 
 def next_id(folder: Path, prefix: str) -> str:
-    pattern     = re.compile(rf"{re.escape(prefix)}-(\d+)", re.IGNORECASE)
+    pattern      = re.compile(rf"{re.escape(prefix)}-(\d+)", re.IGNORECASE)
     existing_ids = [
         int(m.group(1))
         for f in folder.rglob("*.md")
@@ -73,6 +73,80 @@ def _next_version(content: str) -> str:
         return "1.1"
     major, minor = max((int(ma), int(mi)) for ma, mi in versions)
     return f"{major}.{minor + 1}"
+
+
+# ── Re-indexação automática ───────────────────────────────────────────────────
+
+def _reindex_file(path: Path) -> None:
+    """
+    Re-indexa um único arquivo Markdown no ChromaDB após gravação.
+
+    Usa o pipeline incremental do indexer — só processa o arquivo alterado,
+    não re-indexa o vault inteiro. Falhas são logadas como warning e nunca
+    interrompem o fluxo principal (a escrita já foi concluída com sucesso).
+    """
+    try:
+        from viasuperdev.indexer import (  # import lazy — evita ciclo na inicialização
+            MarkdownChunker,
+            build_embedder,
+            get_collection,
+            hash_file,
+            load_manifest,
+            save_manifest,
+            should_index_path,
+        )
+
+        if not should_index_path(path):
+            log.debug("Re-indexação ignorada (filtro de caminho): %s", path)
+            return
+
+        chunker    = MarkdownChunker()
+        embedder   = build_embedder()
+        collection = get_collection("knowledge_base", embedder)
+        manifest   = load_manifest("kb")
+
+        chunks, indexavel = chunker.chunk_file(path, config.VAULT_ROOT)
+
+        if not indexavel or not chunks:
+            log.debug("Re-indexação ignorada (sem chunks úteis): %s", path)
+            return
+
+        path_rel  = path.relative_to(config.VAULT_ROOT).as_posix()
+        file_hash = hash_file(path)
+
+        # Remove chunks antigos do mesmo arquivo (caso seja uma atualização)
+        existing = collection.get(where={"path_rel": path_rel}, include=[])
+        old_ids  = existing.get("ids", [])
+        if old_ids:
+            collection.delete(ids=old_ids)
+            log.debug("Removidos %d chunk(s) antigos de %s", len(old_ids), path_rel)
+
+        # Insere os chunks novos
+        texts      = [c.text for c in chunks]
+        embeddings = embedder.embed_documents(texts)
+        collection.upsert(
+            ids=[c.id for c in chunks],
+            documents=texts,
+            embeddings=embeddings,
+            metadatas=[c.metadata.to_flat_dict() for c in chunks],
+        )
+
+        # Atualiza o manifesto com o hash do arquivo recém-gravado
+        manifest[path_rel] = file_hash
+        save_manifest(manifest, "kb")
+
+        log.info(
+            "Re-indexado automaticamente: %s (%d chunk(s))",
+            path_rel, len(chunks),
+        )
+
+    except Exception as exc:
+        # Re-indexação é best-effort — nunca deve impedir a escrita no vault
+        log.warning(
+            "Re-indexação automática falhou para %s: %s — "
+            "execute 'python -m viasuperdev.indexer' manualmente para sincronizar.",
+            path, exc,
+        )
 
 
 # ── Escritores ────────────────────────────────────────────────────────────────
@@ -185,7 +259,6 @@ def merge_processo(
             f"{history_entry}\n"
         )
 
-    # 5. Exibe ou salva
     if dry_run:
         print(f"\n{'=' * 60}\n[DRY RUN] Atualizando: {existing_path}\n{'=' * 60}")
         print(content)
@@ -193,6 +266,10 @@ def merge_processo(
 
     existing_path.write_text(content, encoding="utf-8")
     log.info("Processo atualizado: %s", existing_path)
+
+    # Re-indexa o processo atualizado
+    _reindex_file(existing_path)
+
     return existing_path
 
 
@@ -215,4 +292,8 @@ def _write_file(folder: Path, filename: str, content: str, dry_run: bool) -> Pat
     folder.mkdir(parents=True, exist_ok=True)
     output_path.write_text(content, encoding="utf-8")
     log.info("Arquivo criado: %s", output_path)
+
+    # Re-indexa o documento recém-criado ou atualizado no ChromaDB
+    _reindex_file(output_path)
+
     return output_path

@@ -19,11 +19,11 @@ rns_impactadas:
   - RN-001
   - RN-002
   - RN-003
-jira: "AG-31945"
+jira: "https://nimitz.atlassian.net/browse/AG-31945"
 responsavel: "Oriel Antonio Gaida"
 solicitante: ""
 sprint: ""
-data_criacao: "2025-05-21"
+data_criacao: "2026-05-21"
 data_limite: ""
 data_inicio: ""
 data_conclusao: ""

@@ -14,9 +14,9 @@ tags:
   - cbs
   - reforma-tributaria
   - fiscal
-total_termos: 23
-data_criacao: "2025-05-21"
-data_revisao: "2025-05-21"
+total_termos: 26
+data_criacao: "2026-05-21"
+data_revisao: "2026-05-21"
 ---
 
 # Glossário — Nota Fiscal e Reforma Tributária
@@ -74,7 +74,7 @@ data_revisao: "2025-05-21"
 - **Definição:** Valor monetário sobre o qual a alíquota de um imposto é aplicada para obter o valor do tributo devido.
 - **Contexto de uso:** No contexto de IBS e CBS, a base pode sofrer reduções. As colunas `Base Total IBS` e `Base Total CBS` na rotina de Notas de Crédito/Débito representam a base da nota de origem.
 - **Sinônimos / variações:** Base de cálculo, Base tributável
-- **Não confundir com:** [[GLOS-nota#Aliquota]]
+- **Não confundir com:** [[GLOS-nota#Alíquota]]
 
 ---
 
@@ -230,3 +230,21 @@ data_revisao: "2025-05-21"
 
 - **Definição:** Entidade (banco, caixa ou carteira) responsável pela custódia e cobrança de duplicatas. Identificado pelo campo `IDPORTADOR` na tabela `PORTADOR`.
 - **Sinônimos / variações:** Portador, banco cobrador, carteira de cobrança
+
+---
+
+### ICMS
+
+- **Definição:** Imposto sobre Circulação de Mercadorias e Serviços — tributo estadual vigente antes da Reforma Tributária (EC 132/2023), substituído pelo IBS no novo regime tributário. Ainda vigente durante o período de transição.
+- **Contexto de uso:** Referenciado em notas fiscais emitidas no regime anterior à reforma. Durante a transição, pode coexistir com o IBS em operações mistas.
+- **Sinônimos / variações:** ICMS, Imposto sobre Circulação de Mercadorias
+- **Não confundir com:** [[GLOS-nota#IBS]] — o IBS substitui o ICMS na reforma tributária
+
+---
+
+### ISS
+
+- **Definição:** Imposto Sobre Serviços de qualquer natureza — tributo municipal vigente antes da Reforma Tributária (EC 132/2023), substituído pelo IBS no novo regime tributário.
+- **Contexto de uso:** Referenciado em documentos fiscais de prestação de serviços emitidos no regime anterior. Junto com o ICMS, compõe os impostos sub-nacionais substituídos pelo IBS.
+- **Sinônimos / variações:** ISS, ISSQN
+- **Não confundir com:** [[GLOS-nota#IBS]] — o IBS substitui o ISS (municipal) e o ICMS (estadual)

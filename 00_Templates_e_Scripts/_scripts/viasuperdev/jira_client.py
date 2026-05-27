@@ -38,6 +38,9 @@ class JiraIssue:
     labels:        list[str]
     versao_sistema: str
     url:           str
+    # Módulo extraído do customfield_10169 ("Nota Fiscal", "Financeiro", etc.)
+    # Prioridade sobre components e fallback de breadcrumb no parsers.py
+    modulo_jira:   str = ""
 
 
 # ── Exceções próprias ─────────────────────────────────────────────────────────
@@ -160,7 +163,6 @@ class JiraClient:
             raise JiraNotFoundError(
                 f"Ticket '{key}' não encontrado. Verifique a chave e o projeto."
             )
-        # Outros erros HTTP
         try:
             detail = resp.json().get("errorMessages", [resp.text])[0]
         except Exception:
@@ -173,6 +175,8 @@ class JiraClient:
             "summary", "description", "status", "issuetype",
             "priority", "assignee", "reporter", "created",
             "updated", "components", "labels",
+            # Módulo do ticket (ex: "Nota Fiscal", "Financeiro")
+            "customfield_10169",
         ]
 
     def _parse_issue(self, data: dict) -> JiraIssue:
@@ -205,7 +209,24 @@ class JiraClient:
             labels=f.get("labels") or [],
             versao_sistema=self._extract_versao(f),
             url=f"{self._base}/browse/{data.get('key', '')}",
+            modulo_jira=self._extract_modulo_jira(f),
         )
+
+    @staticmethod
+    def _extract_modulo_jira(fields: dict) -> str:
+        """
+        Extrai o módulo diretamente do customfield_10169.
+        Este campo é preenchido pelo analista no Jira e é mais confiável
+        do que components (frequentemente vazio) ou o breadcrumb do ADF.
+
+        Exemplos de valores: 'Nota Fiscal', 'Financeiro', 'Estoque', etc.
+        Retorna string vazia se o campo não estiver preenchido — neste caso
+        o parsers.resolve_modulo() faz o fallback via breadcrumb do ADF.
+        """
+        cf = fields.get("customfield_10169")
+        if isinstance(cf, dict):
+            return cf.get("value", "").strip()
+        return ""
 
     @staticmethod
     def _extract_versao(fields: dict) -> str:
@@ -218,7 +239,7 @@ class JiraClient:
             versions = fields.get(field) or []
             if versions and isinstance(versions, list):
                 name = versions[0].get("name", "")
-                # Extrai apenas a parte da versão antes do primeiro espaço
+                # Extrai apenas a parte da versão antes do primeiro " - "
                 # "5.0.2604.xxxx - Lote 734 - Viasuper" → "5.0.2604.xxxx"
                 return name.split(" - ")[0].strip() if name else ""
         return ""

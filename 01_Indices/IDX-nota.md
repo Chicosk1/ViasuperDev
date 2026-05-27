@@ -11,8 +11,8 @@ tags:
   - nota
   - nfe
   - reforma-tributaria
-data_criacao: "2025-05-21"
-data_revisao: "2025-05-21"
+data_criacao: "2026-05-21"
+data_revisao: "2026-05-21"
 ---
 
 # Índice — Nota Fiscal e Reforma Tributária

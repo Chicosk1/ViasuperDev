@@ -16,8 +16,8 @@ tags:
   - dados
 processos_relacionados:
   - PROC-001
-data_criacao: "2025-05-21"
-data_revisao: "2025-05-21"
+data_criacao: "2026-05-21"
+data_revisao: "2026-05-21"
 ---
 
 # Uso de QueryPegaData e QueryPegaCampo
@@ -26,16 +26,14 @@ data_revisao: "2025-05-21"
 
 Definir quando e como usar `QueryPegaData` e `QueryPegaCampo` para executar consultas nomeadas ao servidor de aplicação, garantindo passagem correta de parâmetros, tipos e tamanhos.
 
-## 2. Diferença entre as funções
+## 2. Padrão Definido
 
 | Função | Retorno | Quando usar |
 |---|---|---|
 | `QueryPegaData` | `OleVariant` contendo os dados de um CDS completo | Preencher um `TVsClientDataSet` com múltiplos registros/colunas |
 | `QueryPegaCampo` | `OleVariant` com o valor de um único campo | Obter um valor escalar (ex: um ID, um total, um flag) |
 
-## 3. Padrão Definido
-
-### 3.1 QueryPegaData — preencher um CDS
+### 2.1 QueryPegaData — preencher um CDS
 
 ```pascal
 cdsGeraNotaCredDeb.Data := DmConexao.QueryPegaData(
@@ -50,7 +48,7 @@ cdsGeraNotaCredDeb.Data := DmConexao.QueryPegaData(
   [1000,          0,      0,      0,         0]);        // tamanho (0 = não string)
 ```
 
-### 3.2 QueryPegaCampo — obter valor escalar
+### 2.2 QueryPegaCampo — obter valor escalar
 
 ```pascal
 nTotal := IntOf(DmConexao.QueryPegaCampo(
@@ -62,7 +60,7 @@ nTotal := IntOf(DmConexao.QueryPegaCampo(
   [15, 10]));
 ```
 
-### 3.3 Estrutura do array de parâmetros
+### 2.3 Estrutura do array de parâmetros
 
 O array `aOutrosValores` segue o seguinte padrão:
 
@@ -80,7 +78,7 @@ O array `aOutrosValores` segue o seguinte padrão:
  'P',  'DTFIM',    DataNull(dFim)]
 ```
 
-## 4. Anti-padrão (o que NÃO fazer)
+## 3. Anti-padrão (o que NÃO fazer)
 
 **Não passar tipo errado para o parâmetro — o servidor rejeitará ou converterá silenciosamente:**
 
@@ -107,16 +105,16 @@ nTotal := cds.FieldByName('NTOT').AsInteger;
 nTotal := IntOf(DmConexao.QueryPegaCampo('SEL_TOTAL', 'NTOT', [], [], []));
 ```
 
-## 5. Quando Aplicar
+## 4. Quando Aplicar
 
 - `QueryPegaData`: sempre que o resultado for atribuído a `.Data` de um `TVsClientDataSet` para exibição em grid ou processamento de múltiplos registros.
 - `QueryPegaCampo`: sempre que o objetivo for um único valor — ID, contagem, flag, descrição — sem necessidade de abrir um CDS.
 - Ambos: quando a query está cadastrada na `VsConsulta` (consulta nomeada no servidor). Nunca para SQL montado inteiramente no client.
 
-## 6. Exceções Permitidas
+## 5. Exceções Permitidas
 
 - Overload com `oTdCon: TObject` (quarto parâmetro): aceito quando se trabalha com conexão alternativa. Comportamento idêntico ao padrão, o parâmetro extra é ignorado na implementação atual.
 
-## 7. Processos que Usam Este Padrão
+## 6. Processos que Usam Este Padrão
 
 - [[PROC-001-gerar-notas-credito-debito-massa]]

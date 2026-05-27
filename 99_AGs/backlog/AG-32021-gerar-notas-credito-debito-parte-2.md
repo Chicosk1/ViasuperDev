@@ -20,11 +20,11 @@ rns_impactadas:
   - RN-004
   - RN-005
   - RN-006
-jira: "AG-32021"
+jira: "https://nimitz.atlassian.net/browse/AG-32021"
 responsavel: "Gabriel Samudio Cichocki"
 solicitante: ""
 sprint: ""
-data_criacao: "2025-05-21"
+data_criacao: "2026-05-21"
 data_limite: ""
 data_inicio: ""
 data_conclusao: ""

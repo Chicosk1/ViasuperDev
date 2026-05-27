@@ -15,6 +15,7 @@ tags:
 rns_relacionadas: []
 arquiteturas_relacionadas: []
 padroes_relacionados: []
+jiras_origem: []
 data_criacao: "{{date:YYYY-MM-DD}}"
 data_revisao: "{{date:YYYY-MM-DD}}"
 ---
@@ -48,24 +49,24 @@ Lista de referências — os detalhes ficam em `03_Regras_Negocio/`:
 
 ## 5. Componentes Técnicos
 
-**Linguagem / Framework:** Delphi / FireDAC  
-**Unit principal:** `uNomeDaUnit.pas`  
-**Endpoint (se aplicável):** `POST /api/v1/rota`  
-**Tabelas envolvidas:** `TABELA_A`, `TABELA_B`
-**Consultas envolvidas(se aplicável):**
-**Arquitetura de referência:** [[ARQ-001-nome-da-decisao]]
+- **Linguagem:** Delphi  
+- **Unit principal:** `uNomeDaUnit.pas`  
+- **Endpoint (se aplicável):** `POST /api/v1/rota`  
+- **Tabelas envolvidas:** `TABELA_A`, `TABELA_B`
+- **Consultas envolvidas (se aplicável):**
+- **Arquitetura de referência:** [[ARQ-001-nome-da-decisao]]
 
 ## 6. Casos de Falha
 
 ### [Nome do Erro ou Código]
-**Sintoma:** O que o usuário ou o log apresenta.  
-**Causa:** Por que acontece.  
-**Solução:** O que fazer para resolver.
+- **Sintoma:** O que o usuário ou o log apresenta.  
+- **Causa:** Por que acontece.  
+- **Solução:** O que fazer para resolver.
 
 ### [Nome do Erro ou Código]
-**Sintoma:**  
-**Causa:**  
-**Solução:**
+- **Sintoma:**  
+- **Causa:**  
+- **Solução:**
 
 ## 7. Histórico
 

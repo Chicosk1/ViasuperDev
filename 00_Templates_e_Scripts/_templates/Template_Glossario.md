@@ -24,8 +24,8 @@ data_revisao: "{{date:YYYY-MM-DD}}"
 
 ### {{Termo}}
 
-**Definição:** Uma frase. Precisa, sem ambiguidade.  
-**Contexto de uso:** Onde e quando este termo aparece no ERP.  
-**Sinônimos / variações:** termo-a, termo-b  
-**Não confundir com:** [[GLOS-modulo#OutroTermo]] *(se aplicável)*  
-**Processos relacionados:** [[PROC-001-nome]] *(se aplicável)*
+- **Definição:** Uma frase. Precisa, sem ambiguidade.  
+- **Contexto de uso:** Onde e quando este termo aparece no ERP.  
+- **Sinônimos / variações:** termo-a, termo-b  
+- **Não confundir com:** [[GLOS-modulo#OutroTermo]] *(se aplicável)*  
+- **Processos relacionados:** [[PROC-001-nome]] *(se aplicável)*

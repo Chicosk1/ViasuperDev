@@ -12,20 +12,6 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-# Estrutura esperada no vault:
-# 00_Templates_e_Scripts/
-# └── _scripts/
-#     ├── .env                  ← credenciais (nunca commitar)
-#     ├── .env.example
-#     ├── pyproject.toml
-#     ├── templates/            ← arquivos .j2
-#     └── viasuperdev/
-#         └── config.py        ← este arquivo
-#
-# __file__ = .../00_Templates_e_Scripts/_scripts/viasuperdev/config.py
-# .parent  = .../00_Templates_e_Scripts/_scripts/viasuperdev/
-# .parent.parent = .../00_Templates_e_Scripts/_scripts/   ← raiz do projeto
-
 _PROJECT_ROOT = Path(__file__).parent.parent
 _ENV_FILE     = _PROJECT_ROOT / ".env"
 load_dotenv(_ENV_FILE)
@@ -44,7 +30,6 @@ JIRA_TIMEOUT: int   = 15  # segundos
 _vault_raw = os.getenv("VAULT_ROOT", "")
 VAULT_ROOT: Path = Path(_vault_raw) if _vault_raw else Path.cwd()
 
-# Mapeamento tipo de documento → pasta de destino dentro do vault
 DEST_FOLDERS: dict[str, str] = {
     "ag":             "99_AGs/backlog",
     "processo":       "02_Processos",
@@ -53,14 +38,12 @@ DEST_FOLDERS: dict[str, str] = {
     "padrao-tecnico": "04_Padroes_Tecnicos",
 }
 
-# Subpastas de status para AGs
 AG_STATUS_FOLDERS: dict[str, str] = {
     "backlog": "99_AGs/backlog",
     "doing":   "99_AGs/doing",
     "done":    "99_AGs/done",
 }
 
-# Prefixos de ID por tipo (usado para auto-incremento)
 ID_PREFIXES: dict[str, str] = {
     "ag":             "AG",
     "processo":       "PROC",
@@ -75,12 +58,69 @@ ID_PREFIXES: dict[str, str] = {
 TEMPLATES_DIR: Path = _PROJECT_ROOT / "templates"
 
 
+# ── Indexação (Fase 3 — RAG) ──────────────────────────────────────────────────
+
+_chroma_raw = os.getenv("CHROMA_DIR", "")
+CHROMA_DIR: Path = Path(_chroma_raw) if _chroma_raw else _PROJECT_ROOT / ".chroma"
+
+# Provider padrão: huggingface (local, gratuito, PT-BR nativo)
+# Para usar Voyage AI: EMBEDDINGS_PROVIDER=voyage no .env (requer VOYAGE_API_KEY)
+# ATENÇÃO: trocar de provider exige reindexação completa (--full) em todas as coleções.
+EMBEDDINGS_PROVIDER: str = os.getenv("EMBEDDINGS_PROVIDER", "huggingface")
+EMBEDDINGS_MODEL: str    = os.getenv(
+    "EMBEDDINGS_MODEL",
+    "intfloat/multilingual-e5-small",  # 384d, PT-BR nativo, ~120 MB, MIT
+)
+
+# Voyage AI (legado — usado apenas se EMBEDDINGS_PROVIDER=voyage)
+VOYAGE_API_KEY: str = os.getenv("VOYAGE_API_KEY", "")
+
+# ── Source (Fase 3b — camada Delphi) ─────────────────────────────────────────
+#
+# Cada desenvolvedor aponta SOURCE_ROOT para a raiz do seu repositório Delphi.
+# Exemplo no .env:
+#   SOURCE_ROOT=C:/Projetos/Git_1
+#
+# O indexer vai varrer recursivamente SOURCE_ROOT procurando arquivos .pas,
+# infere o módulo pela subpasta (SOURCE_ROOT/App/<Modulo>/arquivo.pas → Modulo)
+# e persiste os chunks na coleção ChromaDB 'source'.
+#
+# Deixar SOURCE_ROOT vazio desativa a camada source sem erros —
+# o comando `--only source` vai informar que a variável não está configurada.
+_source_raw = os.getenv("SOURCE_ROOT", "")
+SOURCE_ROOT: Path = Path(_source_raw) if _source_raw else Path()
+
+INDEX_EXCLUDE_DIRS: set[str] = {
+    "_scripts",
+    "_templates",
+    "_meta",
+    ".obsidian",
+    ".chroma",
+    ".git",
+    "node_modules",
+}
+
+INDEX_EXCLUDE_CONTEXTO_LLM: set[str] = {"baixo"}
+
+TIPO_TO_COLECAO: dict[str, str] = {
+    "ag":             "kb",
+    "processo":       "kb",
+    "regra-negocio":  "kb",
+    "arquitetura":    "kb",
+    "padrao-tecnico": "kb",
+    "glossario":      "kb",
+    "indice":         "kb",
+}
+
+
 # ── Validação na inicialização ────────────────────────────────────────────────
 
 def validate() -> None:
     """
     Valida que as configurações obrigatórias estão presentes.
     Chamado no início de qualquer comando CLI.
+
+    SOURCE_ROOT é opcional — só valida se o desenvolvedor configurou.
     """
     errors: list[str] = []
 
@@ -96,6 +136,14 @@ def validate() -> None:
         errors.append(f"VAULT_ROOT não encontrado: {VAULT_ROOT}")
     if not TEMPLATES_DIR.exists():
         errors.append(f"Pasta de templates não encontrada: {TEMPLATES_DIR}")
+
+    # SOURCE_ROOT é opcional — valida apenas se foi configurado
+    if _source_raw and not SOURCE_ROOT.exists():
+        errors.append(
+            f"SOURCE_ROOT configurado mas não encontrado: {SOURCE_ROOT}\n"
+            "   Verifique se o caminho está correto ou remova SOURCE_ROOT do .env "
+            "para desativar a camada source."
+        )
 
     if errors:
         print("\n Erros de configuração encontrados:\n")

@@ -25,12 +25,14 @@ rns_relacionadas:
   - RN-006
 arquiteturas_relacionadas:
   - ARQ-001
-padroes_relacionados: []
+padroes_relacionados:
+  - PT-001
+  - PT-002
 jiras_origem:
   - AG-31945
   - AG-32021
-data_criacao: "2025-05-21"
-data_revisao: "2025-05-21"
+data_criacao: "2026-05-21"
+data_revisao: "2026-05-21"
 ---
 
 # Geração de Notas de Crédito e Débito em Massa
@@ -100,7 +102,7 @@ Permitir que o analista financeiro gere Notas de Crédito e Débito em lote a pa
 - **Consultas envolvidas:** 
   - `SEL_MERC_GERANOTACREDDEB_DUPPAG` - duplicata a pagar
   - `SEL_MERC_GERANOTACREDDEB_DUPREC` - duplicata a receber
-- **Implementação detalhada:** [[ARQ-001-unit-gera-nota-cred-deb-tela-filtros]]
+- **Arquitetura de referência:** [[ARQ-001-unit-gera-nota-cred-deb-tela-filtros]]
 
 ## 6. Casos de Falha
 

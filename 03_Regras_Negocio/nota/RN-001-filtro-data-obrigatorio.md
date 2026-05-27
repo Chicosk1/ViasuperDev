@@ -15,9 +15,10 @@ tags:
   - duplicatas
 processos_relacionados:
   - PROC-001
-padroes_relacionados: []
-data_criacao: "2025-05-21"
-data_revisao: "2025-05-21"
+padroes_relacionados:
+  - PT-002
+data_criacao: "2026-05-21"
+data_revisao: "2026-05-21"
 ---
 
 # Filtro de intervalo de datas obrigatório na busca de duplicatas
@@ -59,4 +60,4 @@ Nenhum parâmetro de configuração — regra de validação de interface.
 
 | Data | Versão | Mudança |
 |---|---|---|
-| 2025-05-21 | 1.0 | Criação a partir da [AG-31945](https://nimitz.atlassian.net/browse/AG-31945) (critério 3.5) |
+| 2026-05-21 | 1.0 | Criação a partir da [AG-31945](https://nimitz.atlassian.net/browse/AG-31945) (critério 3.5) |

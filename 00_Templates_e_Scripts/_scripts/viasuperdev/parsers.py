@@ -194,14 +194,36 @@ def extract_fluxo(text: str) -> list[str]:
 
 
 def resolve_modulo(issue: JiraIssue) -> str:
+    """
+    Resolve o módulo do ticket seguindo ordem de prioridade:
+
+    1. customfield_10169 (campo 'Módulo' do Jira) — mais confiável,
+       preenchido pelo analista diretamente no ticket.
+       Ex: 'Nota Fiscal', 'Financeiro', 'Estoque'
+
+    2. components — quando o projeto usa componentes para categorizar módulos.
+
+    3. Breadcrumb do ADF — fallback via padrão 'Viasuper » ... » Módulo'
+       extraído da descrição do ticket.
+
+    4. 'Geral' — último recurso quando nenhuma fonte retorna valor.
+    """
+    # Prioridade 1: customfield_10169 via modulo_jira
+    if issue.modulo_jira:
+        return issue.modulo_jira
+
+    # Prioridade 2: components
     if issue.components:
         return _strip_md(issue.components[0])
+
+    # Prioridade 3: breadcrumb do ADF
     raw_text = adf_to_text(issue.description)
     segments = re.findall(r"»\s*([^»\n]{2,40}?)\s*(?=»|\n|$)", raw_text)
     if len(segments) >= 2:
         return _strip_md(segments[-2].strip())
     elif len(segments) == 1:
         return _strip_md(segments[0].strip())
+
     return "Geral"
 
 
@@ -256,14 +278,12 @@ def parse_ag(issue: JiraIssue, nome_rotina: str = "") -> ParsedAG:
     for line in lines:
         if any(k in line.lower() for k in ["posso ", "permite ", "objetivo", "finalidade"]):
             clean_line = _strip_md(line)
-            # Trunca no limite de 600 chars respeitando a frase completa
             if len(clean_line) > 600:
                 last_dot = clean_line[:600].rfind(".")
                 clean_line = clean_line[:last_dot + 1] if last_dot > 0 else clean_line[:600]
             objetivo = clean_line
             break
     if not objetivo:
-        # Fallback: junta as primeiras linhas úteis até 600 chars
         joined = " ".join(lines)[:600]
         last_dot = joined.rfind(".")
         objetivo = joined[:last_dot + 1] if last_dot > 100 else joined
@@ -287,7 +307,6 @@ def parse_processo(issue: JiraIssue, nome_rotina: str = "") -> ParsedProcesso:
     raw   = clean(adf_to_text(issue.description))
     lines = [l.strip() for l in raw.split("\n") if not _is_ignorable(l)]
 
-    # Junta linhas úteis para formar um objetivo mais completo
     objetivo_raw = " ".join(lines)[:600]
     last_dot     = objetivo_raw.rfind(".")
     objetivo     = _strip_md(

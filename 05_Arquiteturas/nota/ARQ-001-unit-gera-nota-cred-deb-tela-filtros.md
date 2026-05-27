@@ -25,8 +25,8 @@ rns_relacionadas:
   - RN-003
 substitui: ""
 substituido_por: ""
-data_criacao: "2025-05-21"
-data_revisao: "2025-05-21"
+data_criacao: "2026-05-21"
+data_revisao: "2026-05-21"
 ---
 
 # Arquitetura — Tela de Filtros e Listagem (uGeraNotaCredDeb)

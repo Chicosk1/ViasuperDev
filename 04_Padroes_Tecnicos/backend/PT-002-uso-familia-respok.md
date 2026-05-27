@@ -17,8 +17,8 @@ tags:
   - ui
 processos_relacionados:
   - PROC-001
-data_criacao: "2025-05-21"
-data_revisao: "2025-05-21"
+data_criacao: "2026-05-21"
+data_revisao: "2026-05-21"
 ---
 
 # Uso da família RespOk — mensagens e validações ao usuário

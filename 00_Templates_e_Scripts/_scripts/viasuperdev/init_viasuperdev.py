@@ -320,7 +320,7 @@ def cmd_complete() -> None:
 
     cfg = load_config()
     cfg["initialized"] = True
-    cfg["workspace"]   = str(ws)
+    cfg["workspace"]   = str(_workspace_root())
     save_config(cfg)
 
     _out({"status": "OK", "state_dir": str(state_dir), "config": str(CONFIG_PATH)})

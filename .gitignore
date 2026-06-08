@@ -55,3 +55,9 @@ Thumbs.db
 **/venv/
 **/__pycache__/
 **/.pytest_cache/
+
+# Claude Code — arquivos locais/pessoais
+.claude/settings.local.json
+.claude/memory/
+.claude/worktrees/
+.claude/tasks/

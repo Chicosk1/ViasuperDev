@@ -10,28 +10,51 @@ tarefa: analise tecnica com RAG semantico e implementacao Delphi em worktree iso
 
 ## Pre-requisitos
 
-1. **Claude Code** instalado e aberto na pasta raiz do repositorio ViasuperDev
-2. **`.env` configurado** com `VAULT_ROOT`, `CHROMA_DIR` e `SOURCE_ROOT`
+1. **Claude Code** instalado e aberto na pasta raiz do repositorio `viasuper-docs`
+2. **`.env` configurado** em `00_Templates_e_Scripts/_scripts/.env` com:
+   - `VAULT_ROOT` — caminho absoluto da raiz do repositorio
+   - `JIRA_BASE_URL`, `JIRA_EMAIL`, `JIRA_API_TOKEN` — credenciais Jira
+   - `CHROMA_DIR` — caminho do banco vetorial ChromaDB
+   - `SOURCE_ROOT` — caminho do repositorio Delphi (opcional)
 3. **Vault indexado:** rode `make index` pelo menos uma vez antes de usar a skill
 
 ---
 
 ## Primeira Vez — Inicializacao
 
-Na primeira chamada, a skill entra automaticamente no **Modo de Inicializacao**:
+Na primeira chamada, a skill entra automaticamente no **Modo de Inicializacao**.
+
+### O que acontece:
+
+**Passo -1 — Configurar raiz do projeto** _(apenas na primeira vez)_
+
+A skill detecta automaticamente a raiz do repositorio via `git rev-parse --show-toplevel`
+e pede sua confirmacao. Voce pode confirmar o caminho detectado ou informar um diferente.
+
+Apos confirmacao, o caminho e salvo em `~/.claude/viasuperdev-config.json` e
+nao precisara ser informado novamente — em qualquer clone, em qualquer maquina.
+
+**Passos seguintes:**
 - Configura permissoes do Claude Code
 - Verifica vault e ChromaDB
 - Indexa o vault se necessario
 - Cria pasta de estado `.claude/tasks/`
+
+### Como acionar:
 
 Basta chamar normalmente:
 ```
 /viasuperdev AG-XXXXX
 ```
 
-Para refazer a inicializacao:
+Para refazer a inicializacao manualmente:
 ```
 /viasuperdev --init
+```
+
+Para forcar a reconfigurar a raiz do projeto:
+```bash
+python 00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py --set-vault "C:/caminho/para/viasuper-docs"
 ```
 
 ---
@@ -49,31 +72,36 @@ A skill detecta automaticamente a fase pela posicao da AG no vault:
 
 | Localizacao da AG | Fase detectada |
 |---|---|
-| `99_AGs/backlog/` | Fase 1 nova |
-| `99_AGs/doing/` (sem context.md) | Fase 1 em andamento |
+| Nao existe no vault | Skill busca no Jira e cria automaticamente |
+| `99_AGs/backlog/` | Fase 1 — nova |
+| `99_AGs/doing/` (sem context.md) | Fase 1 — em andamento |
 | `99_AGs/doing/` (com context.md) | Fase 2 — implementacao |
 | `99_AGs/done/` | AG concluida |
 
 ---
 
-## As 3 Fases
+## As 2 Fases
 
 ### Fase 1 — Analise Tecnica e Contexto RAG
 
 **O que acontece:**
 1. Pede que voce descreva seu entendimento da tarefa e o fluxo que imagina
 2. Le a AG do vault e extrai criterios, RNs, processos e referencias tecnicas
-3. Executa busca semantica em 4 camadas: ChromaDB KB → ChromaDB source → vault_search.py → Glob/Grep/Read
+3. Executa busca semantica em 4 camadas:
+   - ChromaDB `knowledge_base` (documentos do vault)
+   - ChromaDB `source` (codigo Delphi indexado)
+   - `vault_search.py` (busca textual por ID ou termo)
+   - Glob + Grep + Read direto no repositorio
 4. Monta `AG-XXXXX-context.md` com chunks priorizados e plano tecnico
-5. Se houver ambiguidades, aciona brainstorm
+5. Aciona brainstorm apenas se houver ambiguidades reais
 6. Exibe link do context.md para sua revisao
 
 **O que voce faz:**
-- **Apresentar seu entendimento da tarefa antes da investigacao comecar** (obrigatorio)
-- Confirmar (ou nao) a movimentacao da AG para `doing/`
-- Participar do brainstorm se necessario
+- Apresentar seu entendimento da tarefa **antes** da investigacao comecar (obrigatorio)
+- Confirmar a movimentacao da AG para `doing/` se necessario
+- Participar do brainstorm se acionado
 - Revisar o `context.md` gerado
-- Confirmar quando pronto para implementar
+- Confirmar quando pronto para a Fase 2
 
 ---
 
@@ -81,9 +109,11 @@ A skill detecta automaticamente a fase pela posicao da AG no vault:
 
 **O que acontece:**
 1. Cria worktree isolado em `<SOURCE_ROOT>/../worktrees/AG-XXXXX` na branch `feature/AG-XXXXX`
-2. Gera o codigo Delphi e exibe no chat para revisao (nao salva automaticamente)
-3. Apos sua confirmacao, salva os arquivos no worktree
-4. Faz revisao de codigo automatica (prefixos, formatacao, ausencia de comentarios)
+2. Consulta todos os padroes tecnicos do vault (`04_Padroes_Tecnicos/`) antes de qualquer codigo
+3. Gera o codigo Delphi e exibe no chat para revisao (nao salva automaticamente)
+4. Apos sua confirmacao, salva os arquivos no worktree com encoding Windows-1252
+5. Faz revisao automatica (formatacao `begin/end`, ausencia de comentarios, encoding)
+6. Exibe checklist de validacao
 
 **O que voce faz:**
 - Revisar o codigo gerado antes de confirmar o salvamento
@@ -103,8 +133,8 @@ Se uma AG foi reprovada nos testes:
 /viasuperdev AG-31945 --reprovacao
 ```
 
-A skill le o contexto da reprovacao, reativa o worktree, busca chunks relevantes para
-o ponto de falha e guia a correcao.
+A skill pede que voce descreva o diagnostico da reprovacao, reativa o worktree,
+busca chunks relevantes para o ponto de falha e guia a correcao.
 
 ---
 
@@ -123,21 +153,23 @@ Ao retomar, a skill le o rascunho e continua de onde parou.
 ## Onde ficam os arquivos
 
 ```
-VAULT_ROOT/
+viasuper-docs/                          ← raiz do repositorio
 └── 99_AGs/
-    ├── backlog/        ← AGs aguardando
+    ├── backlog/        ← AGs aguardando implementacao
     ├── doing/
     │   ├── AG-XXXXX-titulo.md
-    │   ├── AG-XXXXX-context.md    ← Contexto RAG (gerado na Fase 1)
-    │   └── AG-XXXXX.rascunho.md  ← Rascunho (se contexto critico)
+    │   ├── AG-XXXXX-context.md         ← Contexto RAG (gerado na Fase 1)
+    │   └── AG-XXXXX.rascunho.md        ← Rascunho (se contexto critico)
     └── done/           ← AGs concluidas
 
-SOURCE_ROOT/../worktrees/
-└── AG-XXXXX/           ← Worktree isolado da AG
+<SOURCE_ROOT>/../worktrees/
+└── AG-XXXXX/           ← Worktree isolado do repositorio Delphi
 
-.claude/tasks/
-└── AG-XXXXX/
-    └── branch-state.json   ← Estado da sessao
+~/.claude/
+├── viasuperdev-config.json             ← Configuracao pessoal (raiz, scripts_dir)
+└── tasks/
+    └── AG-XXXXX/
+        └── branch-state.json           ← Estado da sessao por AG
 ```
 
 ---
@@ -172,5 +204,20 @@ Voce confirma cada artefato antes de ser escrito no worktree.
 
 **O que e o worktree?**
 Um checkout isolado do repositorio Delphi em uma pasta separada, na branch da AG.
-Voce pode abrir no RAD Studio normalmente. Quando terminar, o worktree pode ser removido
-com `init_viasuperdev.py --remove-worktree AG-XXXXX`.
+Voce pode abrir no RAD Studio normalmente. Quando terminar, o worktree pode ser removido:
+```bash
+python 00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py --remove-worktree AG-XXXXX
+```
+
+**Clonou o repositorio em outro caminho?**
+Na primeira execucao de `/viasuperdev`, a skill detecta a raiz via git e pede confirmacao.
+Para reconfigurar manualmente a qualquer momento:
+```bash
+python 00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py --set-vault "C:/novo/caminho/viasuper-docs"
+```
+
+**Como verificar se o ambiente esta configurado corretamente?**
+```bash
+python 00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py --check
+```
+Retorna JSON com status de cada componente: vault, ChromaDB, scripts e indices.

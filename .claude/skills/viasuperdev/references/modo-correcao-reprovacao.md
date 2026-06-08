@@ -47,14 +47,14 @@ Leia `branch-state.json` para obter `worktree_path` e `branch`.
 
 ```bash
 # Verifica se o worktree ainda existe
-python "$(git -C "$(pwd)" rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" \
+python "$(git -C "$(pwd)" rev-parse --show-toplevel)/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" \
   --check-worktree AG-XXXXX
 ```
 
 - `worktree_ok: true` → prossiga diretamente para o Passo 3.
 - `worktree_ok: false` → recriar:
   ```bash
-  python "$(git -C "$(pwd)" rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" \
+  python "$(git -C "$(pwd)" rev-parse --show-toplevel)/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" \
     --worktree AG-XXXXX --branch <branch existente>
   ```
 
@@ -80,7 +80,7 @@ if matches:
 
 Execute queries direcionadas ao ponto de reprovacao:
 ```bash
-SCRIPTS="$(git rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts"
+SCRIPTS="$(git rev-parse --show-toplevel)/00_Templates_e_Scripts/_scripts"
 cd "$SCRIPTS"
 
 # Busca pela regra de negocio que falhou

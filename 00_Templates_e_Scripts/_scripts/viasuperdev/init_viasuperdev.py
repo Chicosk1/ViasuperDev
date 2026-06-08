@@ -53,6 +53,11 @@ Usage:
       Writes stdin content to <path> with specified encoding (default utf-8).
       Used by skill to save generated Delphi code to worktree.
       Returns JSON: {status: "OK"|"ERRO", path: str}.
+
+  python init_viasuperdev.py --set-vault <vault_root>
+      Saves vault_root and derived scripts_dir to ~/.claude/viasuperdev-config.json.
+      Called on first run to make the project root path configurable per developer.
+      Returns JSON: {status: "OK"|"ERRO", vault_root: str, scripts_dir: str}.
 """
 
 from __future__ import annotations
@@ -68,16 +73,16 @@ CONFIG_PATH   = Path.home() / ".claude" / "viasuperdev-config.json"
 STATE_DIR_REL = ".claude/tasks"   # relative to workspace root
 
 # Localizacao do script:
-#   <repo_root>/ViasuperDev/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py
+#   <vault_root>/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py
 #
-# SKILL_BASE    = _scripts/viasuperdev/
-# SCRIPTS_DIR   = _scripts/
-# VIASUPERDEV_DIR = ViasuperDev/   (subpasta do repo git que contem vault + scripts)
-# WORKSPACE     = raiz do repo git (ClaudeCopilot/) — obtida via git
+# SKILL_BASE      = _scripts/viasuperdev/
+# SCRIPTS_DIR     = _scripts/
+# VIASUPERDEV_DIR = vault_root  (raiz do repositorio — contem vault + scripts)
+# WORKSPACE       = raiz do repo git (igual a VIASUPERDEV_DIR) — confirmado via git
 
 SKILL_BASE      = Path(__file__).parent            # _scripts/viasuperdev/
 SCRIPTS_DIR     = SKILL_BASE.parent                # _scripts/
-VIASUPERDEV_DIR = SKILL_BASE.parent.parent.parent  # ViasuperDev/
+VIASUPERDEV_DIR = SKILL_BASE.parent.parent.parent  # vault_root (ex: viasuper-docs/)
 
 CLAUDE_SETTINGS_PATH = Path.home() / ".claude" / "settings.json"
 REQUIRED_PERMISSIONS_ALLOW = ["Read(*)", "Edit(*)", "Write(*)", "Bash(*)", "Agent(*)"]
@@ -210,6 +215,7 @@ def cmd_check() -> None:
     result: dict = {
         "initialized":     cfg.get("initialized", False),
         "viasuperdev_dir": str(vsd),
+        "scripts_dir":     str(SCRIPTS_DIR),
         "vault_root":      str(vault)  if vault  else "NAO_CONFIGURADO",
         "vault_exists":    vault.exists()  if vault  else False,
         "chroma_dir":      str(chroma) if chroma else "NAO_CONFIGURADO",
@@ -321,9 +327,12 @@ def cmd_complete() -> None:
     cfg = load_config()
     cfg["initialized"] = True
     cfg["workspace"]   = str(_workspace_root())
+    cfg.setdefault("vault_root",  str(VIASUPERDEV_DIR))
+    cfg.setdefault("scripts_dir", str(SCRIPTS_DIR))
     save_config(cfg)
 
-    _out({"status": "OK", "state_dir": str(state_dir), "config": str(CONFIG_PATH)})
+    _out({"status": "OK", "state_dir": str(state_dir), "config": str(CONFIG_PATH),
+          "vault_root": cfg["vault_root"], "scripts_dir": cfg["scripts_dir"]})
 
 
 def cmd_reset() -> None:
@@ -550,6 +559,40 @@ def cmd_remove_worktree(ticket: str) -> None:
         _out({"status": "ERRO", "detail": str(e)})
 
 
+def cmd_set_vault(vault_root_str: str) -> None:
+    """
+    Saves vault_root and derived scripts_dir to ~/.claude/viasuperdev-config.json.
+    Called on first run to make the project root path configurable per developer.
+    """
+    vault = Path(vault_root_str)
+    if not vault.exists():
+        _out({"status": "ERRO", "detail": f"Caminho nao encontrado: {vault}"})
+        return
+
+    scripts = vault / "00_Templates_e_Scripts" / "_scripts"
+    if not scripts.exists():
+        _out({
+            "status": "ERRO",
+            "detail": (
+                f"Pasta _scripts nao encontrada em {scripts}. "
+                "Confirme que o caminho informado e a raiz do repositorio viasuper-docs."
+            ),
+        })
+        return
+
+    cfg = load_config()
+    cfg["vault_root"]  = str(vault)
+    cfg["scripts_dir"] = str(scripts)
+    save_config(cfg)
+
+    _out({
+        "status":      "OK",
+        "vault_root":  str(vault),
+        "scripts_dir": str(scripts),
+        "config":      str(CONFIG_PATH),
+    })
+
+
 def cmd_save_file(path: str, encoding: str = "utf-8") -> None:
     """Writes stdin content to <path> with given encoding."""
     try:
@@ -632,6 +675,14 @@ if __name__ == "__main__":
             eidx = args.index("--encoding")
             enc = args[eidx + 1] if eidx + 1 < len(args) else "utf-8"
         cmd_save_file(path, enc)
+
+    elif "--set-vault" in args:
+        idx = args.index("--set-vault")
+        vault_path = args[idx + 1] if idx + 1 < len(args) else ""
+        if not vault_path:
+            _out({"status": "ERRO", "detail": "Informe o caminho da raiz do repositorio. Ex: --set-vault C:/Repositorios/viasuper-docs"})
+        else:
+            cmd_set_vault(vault_path)
 
     else:
         print(__doc__)

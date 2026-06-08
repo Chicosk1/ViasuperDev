@@ -17,7 +17,7 @@ Se o context.md nao existir, volte para a Fase 1.
 ## Passo 1 — Criar worktree para a AG
 
 ```bash
-python "$(git -C "$(pwd)" rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --worktree AG-XXXXX
+python "$(git -C "$(pwd)" rev-parse --show-toplevel)/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --worktree AG-XXXXX
 ```
 
 O script:
@@ -39,7 +39,7 @@ Informe ao usuario: "Worktree criado em `<path>` na branch `<branch>`."
 **Antes de qualquer escrita de codigo:**
 1. Consulte todos os padroes tecnicos indexados no vault:
 ```bash
-SCRIPTS="$(git rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts"
+SCRIPTS="$(git rev-parse --show-toplevel)/00_Templates_e_Scripts/_scripts"
 cd "$SCRIPTS"
 
 # Busca todos os padroes tecnicos disponíveis
@@ -85,7 +85,7 @@ Aplique **todos** os padroes tecnicos encontrados.
 3. Apos confirmacao, salve os arquivos diretamente no worktree:
    ```bash
    # Salva com encoding Windows-1252
-   python "$(git -C "$(pwd)" rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" \
+   python "$(git -C "$(pwd)" rev-parse --show-toplevel)/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" \
      --save-file "<worktree_path>/App/Mercado/<NomeDaUnit>.pas" \
      --encoding windows-1252
    ```

@@ -10,7 +10,7 @@ o plano tecnico. Nada de codigo ainda.
 **Passo 0a — Inicializar estado da AG:**
 
 ```bash
-python "$(git -C "$(pwd)" rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" \
+python "$(git -C "$(pwd)" rev-parse --show-toplevel)/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" \
   --init-ag AG-XXXXX
 ```
 
@@ -107,7 +107,7 @@ Para cada documento necessario, tente as camadas em ordem.
 
 **Camada 1 — ChromaDB KB (semantico):**
 ```bash
-SCRIPTS="$(git rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts"
+SCRIPTS="$(git rev-parse --show-toplevel)/00_Templates_e_Scripts/_scripts"
 cd "$SCRIPTS"
 
 # Query 1: titulo + modulo
@@ -136,7 +136,7 @@ python -m viasuperdev.indexer --query "<modulo> <TFFormProc ou padraoCds>" --col
 
 **Camada 3 — vault_search.py (score < 0.75 ou camada 1/2 insuficiente):**
 ```bash
-SCRIPTS="$(git rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts"
+SCRIPTS="$(git rev-parse --show-toplevel)/00_Templates_e_Scripts/_scripts"
 
 # Por ID exato — sempre tentar primeiro
 python "$SCRIPTS/viasuperdev/vault_search.py" --id RN-XXX

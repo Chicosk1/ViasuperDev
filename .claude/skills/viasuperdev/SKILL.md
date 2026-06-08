@@ -93,7 +93,7 @@ Scripts auxiliares do ecossistema (em `00_Templates_e_Scripts/_scripts/`):
 **Antes de qualquer outra acao**, execute:
 
 ```bash
-python "$(git -C "$(pwd)" rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --check
+python "$(git -C "$(pwd)" rev-parse --show-toplevel)/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --check
 ```
 
 - Se `initialized: true` e nao foi passado `--init` → prossiga normalmente.

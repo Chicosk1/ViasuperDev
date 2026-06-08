@@ -7,10 +7,48 @@ Informe ao usuario:
 
 ---
 
+## Passo -1 — Configurar raiz do projeto
+
+Verifique se a raiz do vault ja esta salva no config pessoal:
+
+```python
+import json, pathlib
+p = pathlib.Path.home() / '.claude' / 'viasuperdev-config.json'
+cfg = json.loads(p.read_text()) if p.exists() else {}
+print(cfg.get('vault_root') or 'NAO_CONFIGURADO')
+```
+
+- Se retornar um caminho → raiz ja configurada. **Salve como `VAULT` e pule para o Passo 0.**
+- Se `NAO_CONFIGURADO` → primeira execucao. Continue:
+
+Detecte a raiz automaticamente via git:
+
+```bash
+git -C "$(pwd)" rev-parse --show-toplevel
+```
+
+Informe ao desenvolvedor e aguarde confirmacao:
+> "Raiz detectada: `<path retornado>`. Este e o caminho correto do repositorio `viasuper-docs`?
+> Confirme ou informe o caminho correto."
+
+Apos confirmacao (use o caminho informado ou o detectado), chame:
+
+```bash
+python "<vault_root>/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --set-vault "<vault_root>"
+```
+
+- `status: OK` → raiz salva. Salve `vault_root` como `VAULT` e prossiga.
+- `status: ERRO` → avise o usuario e exiba o `detail`.
+
+> Apos este passo, o caminho fica salvo em `~/.claude/viasuperdev-config.json`
+> e nao precisara ser informado novamente.
+
+---
+
 ## Passo 0 — Configurar permissoes do Claude Code
 
 ```bash
-python "$(git -C "$(pwd)" rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --configure-permissions
+python "$VAULT/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --configure-permissions
 ```
 
 - `status: OK` → informe quais permissoes foram adicionadas e quais ja estavam presentes.
@@ -24,7 +62,7 @@ python "$(git -C "$(pwd)" rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_
 ## Passo 1 — Verificar e configurar ambiente
 
 ```bash
-python "$(git -C "$(pwd)" rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --setup "$(git rev-parse --show-toplevel)/ViasuperDev"
+python "$VAULT/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --setup "$VAULT"
 ```
 
 Leia o JSON retornado e reporte ao usuario. Se qualquer campo iniciar com `ERRO` ou `AUSENTE`, avise.
@@ -40,7 +78,7 @@ Campos verificados:
 Se `index_kb_ok: false`:
 > "O vault ainda nao esta indexado. Vou indexar agora..."
 ```bash
-cd "$(git rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts"
+cd "$VAULT/00_Templates_e_Scripts/_scripts"
 python -m viasuperdev.indexer --only kb
 ```
 
@@ -55,17 +93,18 @@ python -m viasuperdev.indexer --only source
 ## Passo 2 — Criar pasta de estado
 
 ```bash
-python "$(git -C "$(pwd)" rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --complete
+python "$VAULT/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --complete
 ```
 
-Isso cria `.claude/tasks/` para armazenar os `branch-state.json` por AG.
+Isso cria `.claude/tasks/` para armazenar os `branch-state.json` por AG
+e salva `vault_root` e `scripts_dir` no config pessoal.
 
 ---
 
 ## Passo 3 — Verificar estado pos-inicializacao
 
 ```bash
-python "$(git -C "$(pwd)" rev-parse --show-toplevel)/ViasuperDev/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --check
+python "$VAULT/00_Templates_e_Scripts/_scripts/viasuperdev/init_viasuperdev.py" --check
 ```
 
 Leia o JSON e **substitua** os valores de `initialized` e `vault_stats` no contexto atual.

@@ -48,3 +48,10 @@ Thumbs.db
 *.mov
 *.wmv
 
+# Obsidian
+.obsidian/
+
+# Python
+**/venv/
+**/__pycache__/
+**/.pytest_cache/

@@ -1,0 +1,70 @@
+---
+id: {{ doc_id }}
+titulo: "{{ parsed.nome_rotina | replace('"', '\\"') }}"
+tipo: processo
+modulo: "{{ parsed.modulo }}"
+sistema: viasuper
+versao_sistema: "{{ issue.versao_sistema }}"
+status: rascunho
+versao_template: "1.0"
+contexto_llm: alto
+tags:
+  - processo
+  - "{{ parsed.modulo | lower | replace(' ', '-') }}"
+  - viasuper
+rns_relacionadas: []
+arquiteturas_relacionadas: []
+padroes_relacionados: []
+jiras_origem: []
+data_criacao: "{{ today }}"
+data_revisao: "{{ today }}"
+---
+
+# {{ parsed.nome_rotina }}
+
+## 1. Objetivo
+
+{{ parsed.objetivo }}
+
+## 2. Pré-condições
+
+O que deve ser verdade antes de iniciar:
+- [ Preencher após análise técnica ]
+
+## 3. Regras de Negócio Aplicadas
+
+Lista de referências — os detalhes ficam em `03_Regras_Negocio/`:
+- [ Identificar e linkar RNs após análise ]
+
+## 4. Fluxo do Processo
+
+{% for passo in parsed.fluxo %}
+{{ passo }}
+{% endfor %}
+
+## 5. Componentes Técnicos
+
+- **Linguagem:** Delphi
+- **Unit principal:** `uNomeDaUnit.pas`
+- **Endpoint (se aplicável):** `POST /api/v1/rota`
+- **Tabelas envolvidas:** `TABELA_A`, `TABELA_B`
+- **Consultas envolvidas (se aplicável):**
+- **Arquitetura de referência:** [[ARQ-001-nome-da-decisao]]
+
+## 6. Casos de Falha
+
+### [Nome do Erro ou Código]
+**Sintoma:** O que o usuário ou o log apresenta.
+**Causa:** Por que acontece.
+**Solução:** O que fazer para resolver.
+
+### [Nome do Erro ou Código]
+**Sintoma:**
+**Causa:**
+**Solução:**
+
+## 7. Histórico
+
+| Data | Versão | Mudança |
+|---|---|---|
+| {{ today }} | 1.0 | Criação a partir de [{{ issue.key }}]({{ issue.url }}) — {{ issue.summary }} |

@@ -1,0 +1,69 @@
+---
+id: {{ issue.key }}
+titulo: "{{ issue.summary | replace('"', '\\"') }}"
+tipo: ag
+modulo: "{{ parsed.modulo }}"
+status: backlog
+prioridade: {{ parsed.prioridade }}
+versao_template: "1.0"
+contexto_llm: alto
+tags:
+  - ag
+  - "{{ parsed.modulo | lower | replace(' ', '-') }}"
+processos_impactados: []
+rns_impactadas: []
+jira: "{{ issue.url }}"
+responsavel: "{{ issue.assignee }}"
+solicitante: "{{ issue.reporter }}"
+sprint: ""
+data_criacao: "{{ issue.created }}"
+data_limite: ""
+data_inicio: ""
+data_conclusao: ""
+---
+
+# {{ issue.summary }}
+
+## 1. Contexto
+
+{{ parsed.contexto }}
+
+## 2. Objetivo
+
+{{ parsed.objetivo }}
+
+## 3. Escopo
+
+### Inclui
+{% for item in parsed.escopo_inclui %}
+- {{ item }}
+{% endfor %}
+
+### Não inclui
+{% for item in parsed.escopo_nao_inclui %}
+- {{ item }}
+{% endfor %}
+
+## 4. Critérios de Aceite
+
+{% for criterio in parsed.criterios %}
+- [ ] {{ criterio }}
+{% endfor %}
+
+## 5. Definição de Pronto
+
+Condições técnicas que o Claude Code deve verificar antes de commitar:
+- [ ] Todos os testes automatizados passando
+- [ ] Sem erros de compilação
+- [ ] Sem TODOs ou FIXMEs introduzidos
+- [ ] Padrão técnico do módulo seguido ([[PT-001-nome]])
+
+## 6. Referências Técnicas
+
+{% for ref in parsed.referencias %}
+- {{ ref }}
+{% endfor %}
+
+## 7. Resultado Esperado
+
+{{ parsed.resultado_esperado }}

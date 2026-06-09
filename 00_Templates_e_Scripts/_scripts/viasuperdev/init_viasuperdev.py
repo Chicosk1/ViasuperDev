@@ -185,6 +185,42 @@ def _load_viasuperdev_config() -> tuple[Path | None, Path | None, Path | None]:
 
     return vault, chroma, source
 
+def _check_and_init_submodule(workspace: Path, submodule: str = "commons") -> dict:
+    """
+    Verifica se o submodulo git esta inicializado (diretorio nao-vazio).
+    Se estiver vazio, executa 'git submodule update --init --remote <submodule>'.
+    Retorna dict com: submodule, populated (bool), action ('none'|'init_ok'|'init_fail'), detail.
+    """
+    submodule_path = workspace / submodule
+    # Considera "populado" quando ha pelo menos um arquivo dentro
+    populated = submodule_path.exists() and any(submodule_path.iterdir())
+
+    if populated:
+        return {"submodule": submodule, "populated": True, "action": "none", "detail": "ok"}
+
+    # Tenta inicializar com --remote primeiro; se falhar, tenta sem
+    for extra in [["--remote"], []]:
+        cmd = ["git", "-C", str(workspace), "submodule", "update", "--init"] + extra + [submodule]
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            if result.returncode == 0:
+                populated_after = submodule_path.exists() and any(submodule_path.iterdir())
+                return {
+                    "submodule": submodule,
+                    "populated": populated_after,
+                    "action": "init_ok",
+                    "detail": result.stdout.strip() or "submodulo inicializado com sucesso",
+                }
+        except Exception:
+            pass
+
+    return {
+        "submodule": submodule,
+        "populated": False,
+        "action": "init_fail",
+        "detail": "Falha ao inicializar submodulo. Execute manualmente: git submodule update --init --remote commons",
+    }
+
 
 def _chroma_stats(chroma_dir: Path) -> dict:
     """Returns chunk counts per collection from ChromaDB manifests."""
@@ -211,6 +247,7 @@ def cmd_check() -> None:
     cfg    = load_config()
     vault, chroma, source = _load_viasuperdev_config()
     vsd    = _viasuperdev_dir()   # ViasuperDev/
+    ws     = _workspace_root()    # raiz do repositorio
 
     result: dict = {
         "initialized":     cfg.get("initialized", False),
@@ -226,7 +263,12 @@ def cmd_check() -> None:
         "index_source_ok": False,
         "vault_stats":     {},
         "chroma_stats":    {},
+        "submodules":      {},
     }
+
+    # Submodulos git — inicializa automaticamente se necessario
+    for submodule in ["commons"]:
+        result["submodules"][submodule] = _check_and_init_submodule(ws, submodule)
 
     # Vault stats
     if vault and vault.exists():

@@ -14,17 +14,7 @@ tags:
   - importacao-nfe
   - xml
   - viasuper
-rns_relacionadas:
-  - RN-00x-carregar-notas-existentes
-  - RN-00x-baixa-pedido-automatica
-  - RN-00x-cadastro-atualizacao-fornecedor
-  - RN-00x-transferencia-entre-filiais
-  - RN-00x-recalculo-tributario-importacao
-  - RN-00x-validacao-casas-decimais
-  - RN-00x-desmembramento-produtos
-  - RN-00x-rateio-custos-importacao
-  - RN-00x-financeiro-pagamento-importacao
-  - RN-00x-formacao-preco-venda
+rns_relacionadas: []
 arquiteturas_relacionadas: []
 padroes_relacionados: []
 jiras_origem: []
@@ -49,19 +39,19 @@ Facilitar e agilizar o lançamento de notas fiscais de entrada de mercadorias no
 
 As validações e regras disponíveis na rotina de importação de XML incluem:
 
-- [[RN-00x-carregar-notas-existentes]] — **Carregar Notas já Existentes:** Se ativado, exibe a nota no grid mas bloqueia sua importação secundária, gerando um status de erro de nota já existente no grid de arquivos carregados.
-- [[RN-00x-baixa-pedido-automatica]] — **Entregar Pedido após Importação:** Se marcado, ao salvar a nota de entrada com sucesso, o sistema exibe uma mensagem solicitando a confirmação de baixa do pedido de compra vinculado.
-- [[RN-00x-cadastro-atualizacao-fornecedor]] — **Atualização de Cadastro do Fornecedor:** Se desmarcado ("Não Atualiza Dados do Fornecedor"), o sistema atualiza telefone e endereço do fornecedor de acordo com os dados do XML. Caso o fornecedor não exista no banco de dados, efetua o cadastro automático do mesmo.
-- [[RN-00x-transferencia-entre-filiais]] — **Transferência de Notas entre Filiais:** Se marcado, permite receber e transferir notas fiscais emitidas pela matriz diretamente para a filial selecionada.
-- [[RN-00x-recalculo-tributario-importacao]] — **Recálculo Tributário na Importação (ICMS/PIS/COFINS/ICMS-ST):** Quando ativos, os checkboxes de recálculo (Recalcula ICMS, Recalcula PIS, Recalcula COFINS, Recalcula Prod sem valor ICMS-ST) substituem os impostos originais importados com o XML pelas configurações fiscais cadastradas localmente no ERP.
-- [[RN-00x-validacao-casas-decimais]] — **Validações de Casas Decimais (Processamento):** Corrige divergências nos somatórios dos itens causadas por dízimas ou excesso de casas decimais do XML por meio de três opções:
+- RN-00x-carregar-notas-existentes — **Carregar Notas já Existentes:** Se ativado, exibe a nota no grid mas bloqueia sua importação secundária, gerando um status de erro de nota já existente no grid de arquivos carregados.
+- RN-00x-baixa-pedido-automatica — **Entregar Pedido após Importação:** Se marcado, ao salvar a nota de entrada com sucesso, o sistema exibe uma mensagem solicitando a confirmação de baixa do pedido de compra vinculado.
+- RN-00x-cadastro-atualizacao-fornecedor — **Atualização de Cadastro do Fornecedor:** Se desmarcado ("Não Atualiza Dados do Fornecedor"), o sistema atualiza telefone e endereço do fornecedor de acordo com os dados do XML. Caso o fornecedor não exista no banco de dados, efetua o cadastro automático do mesmo.
+- RN-00x-transferencia-entre-filiais — **Transferência de Notas entre Filiais:** Se marcado, permite receber e transferir notas fiscais emitidas pela matriz diretamente para a filial selecionada.
+- RN-00x-recalculo-tributario-importacao — **Recálculo Tributário na Importação (ICMS/PIS/COFINS/ICMS-ST):** Quando ativos, os checkboxes de recálculo (Recalcula ICMS, Recalcula PIS, Recalcula COFINS, Recalcula Prod sem valor ICMS-ST) substituem os impostos originais importados com o XML pelas configurações fiscais cadastradas localmente no ERP.
+- N-00x-validacao-casas-decimais — **Validações de Casas Decimais (Processamento):** Corrige divergências nos somatórios dos itens causadas por dízimas ou excesso de casas decimais do XML por meio de três opções:
   - *Considerar “Valor total” = “Valor Un Trib” x “Quantidade” do XML* (corrige divergência unitária/quantidade do item).
   - *Considerar “Total a Acertar” = “Valor Total da NF-e” do XML* (corrige divergência entre total calculado e total da NF-e).
   - *Considerar “Total dos Produtos” = ”Valor Total” do grid* (corrige divergência de somatório geral do grid).
-- [[RN-00x-desmembramento-produtos]] — **Desmembramento de Itens na Importação:** Permite que um produto do XML seja fracionado em múltiplos itens internos. O item original é excluído do grid e os novos produtos herdam as mesmas tributações do registro de origem.
-- [[RN-00x-rateio-custos-importacao]] — **Rateio de Despesas Acessórias:** Distribui de forma proporcional os valores de frete e despesas adicionais entre os produtos do grid com base em Valor, Peso Bruto ou Quantidade.
-- [[RN-00x-financeiro-pagamento-importacao]] — **Geração de Contas a Pagar:** Permite realizar o desdobramento financeiro da nota com as duplicatas de pagamento e formas permitidas para o fornecedor, admitindo o uso de múltiplos meios para a mesma NF-e.
-- [[RN-00x-formacao-preco-venda]] — **Integração com Formação de Preço:** Após concluir a gravação da importação, o sistema exibe uma mensagem direcionando o usuário para a rotina de precificação e formação de preço de venda dos itens importados (sujeito à configuração ativa do ERP).
+- RN-00x-desmembramento-produtos — **Desmembramento de Itens na Importação:** Permite que um produto do XML seja fracionado em múltiplos itens internos. O item original é excluído do grid e os novos produtos herdam as mesmas tributações do registro de origem.
+- RN-00x-rateio-custos-importacao — **Rateio de Despesas Acessórias:** Distribui de forma proporcional os valores de frete e despesas adicionais entre os produtos do grid com base em Valor, Peso Bruto ou Quantidade.
+- RN-00x-financeiro-pagamento-importacao — **Geração de Contas a Pagar:** Permite realizar o desdobramento financeiro da nota com as duplicatas de pagamento e formas permitidas para o fornecedor, admitindo o uso de múltiplos meios para a mesma NF-e.
+- RN-00x-formacao-preco-venda — **Integração com Formação de Preço:** Após concluir a gravação da importação, o sistema exibe uma mensagem direcionando o usuário para a rotina de precificação e formação de preço de venda dos itens importados (sujeito à configuração ativa do ERP).
 
 ## 4. Fluxo do Processo
 

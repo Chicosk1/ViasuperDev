@@ -15,7 +15,8 @@ tags:
   - transferencias
   - compras
   - viasuper
-rns_relacionadas: []
+rns_relacionadas:
+  - RN-004
 arquiteturas_relacionadas: []
 padroes_relacionados: []
 jiras_origem: []
@@ -48,6 +49,7 @@ As validações e regras disponíveis na rotina de Pedido Centralizado incluem:
 - RN-00x-sugestao-compra-giro-sazonal — **Cálculo da Sugestão por Índice de Vendas:** O sistema calcula a sugestão utilizando o histórico temporal de vendas do mês selecionado nos últimos 5 anos e percentuais de volatilidade recentes (Job `AtGiroSazonal` executado no Gerenciador de Tarefas).
 - RN-00x-sugestao-compra-media-vendas — **Cálculo da Sugestão por Média de Vendas:** O sistema calcula as sugestões com base na Média Original, Desvio Padrão e Média do cadastro do produto (Job `CalcEstMedVenda` executado no Gerenciador de Tarefas).
 - RN-00x-carregamento-impostos-produtos — **Carregamento Fiscal:** A marcação do checkbox sem título ao lado de *"Realizar Compra Centralizada"* determina se o sistema deve recuperar e exibir as alíquotas de impostos de entrada (ICMS, PIS, COFINS, IPI, Funrural) dos produtos incluídos no grid.
+- [[RN-004-rateio-proporcional-itens]] — **Rateio Proporcional nos Itens do Pedido Centralizado:** Valores globais do pedido (como frete, seguro, desconto global e despesas acessórias) são distribuídos proporcionalmente entre os itens com base na participação de cada um no valor total do documento.
 
 ## 4. Fluxo do Processo
 

@@ -14,7 +14,8 @@ tags:
   - importacao-nfe
   - xml
   - viasuper
-rns_relacionadas: []
+rns_relacionadas:
+  - RN-004
 arquiteturas_relacionadas: []
 padroes_relacionados: []
 jiras_origem: []
@@ -49,7 +50,7 @@ As validações e regras disponíveis na rotina de importação de XML incluem:
   - *Considerar “Total a Acertar” = “Valor Total da NF-e” do XML* (corrige divergência entre total calculado e total da NF-e).
   - *Considerar “Total dos Produtos” = ”Valor Total” do grid* (corrige divergência de somatório geral do grid).
 - RN-00x-desmembramento-produtos — **Desmembramento de Itens na Importação:** Permite que um produto do XML seja fracionado em múltiplos itens internos. O item original é excluído do grid e os novos produtos herdam as mesmas tributações do registro de origem.
-- RN-00x-rateio-custos-importacao — **Rateio de Despesas Acessórias:** Distribui de forma proporcional os valores de frete e despesas adicionais entre os produtos do grid com base em Valor, Peso Bruto ou Quantidade.
+- [[RN-004-rateio-proporcional-itens]] — **Rateio de Despesas Acessórias:** Distribui de forma proporcional os valores de frete e despesas adicionais entre os produtos do grid com base em Valor, Peso Bruto ou Quantidade
 - RN-00x-financeiro-pagamento-importacao — **Geração de Contas a Pagar:** Permite realizar o desdobramento financeiro da nota com as duplicatas de pagamento e formas permitidas para o fornecedor, admitindo o uso de múltiplos meios para a mesma NF-e.
 - RN-00x-formacao-preco-venda — **Integração com Formação de Preço:** Após concluir a gravação da importação, o sistema exibe uma mensagem direcionando o usuário para a rotina de precificação e formação de preço de venda dos itens importados (sujeito à configuração ativa do ERP).
 
@@ -78,8 +79,8 @@ As validações e regras disponíveis na rotina de importação de XML incluem:
      - *Laranja:* Nota possui advertências, permitindo salvar em estado pendente de conferência posterior.
      - *Vermelho:* Nota com rejeições impeditivas (o botão Salvar é bloqueado até a correção).
    - **Campo 2 (Cabeçalho):** Exibe dados gerais (série, número do documento, fornecedor, código de pessoa, emissão). O campo **Data de Entrada** é editável pelo usuário.
-   - **Campo 4 (Mensagens de Advertência/Rejeição):** Lista o descritivo detalhado das inconsistências identificadas pelo sistema (ex: produto sem cadastro, CFOP inconsistente, imposto nulo).
-2. No **Campo 3 (Itens e Impostos)**, navegar nas abas correspondentes para validação e ajustes fiscais:
+   - **Campo 3 (Mensagens de Advertência/Rejeição):** Lista o descritivo detalhado das inconsistências identificadas pelo sistema (ex: produto sem cadastro, CFOP inconsistente, imposto nulo).
+2. No **Campo 4 (Itens e Impostos)**, navegar nas abas correspondentes para validação e ajustes fiscais:
    - **Aba Produtos:** Vincular os produtos importados aos códigos de cadastro internos (pressione **F3** para busca rápida). Para desmembrar um produto, clique com o botão direito sobre ele, selecione **Desmembrar Produto** e confirme clicando em **Salvar**.
    - **Aba ICMS:** Ajustar CST, bases e alíquotas de ICMS se necessário, ou marcar o checkbox **Recalcula** para utilizar as regras do ERP.
    - **Abas IPI, PIS e COFINS:** Ajustar CST, bases e alíquotas correspondentes, ou marcar a coluna **Recalcula** para aplicar as parametrizações internas do sistema.

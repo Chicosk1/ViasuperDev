@@ -15,7 +15,8 @@ tags:
   - nfse
   - reinf
   - viasuper
-rns_relacionadas: []
+rns_relacionadas:
+  - RN-004
 arquiteturas_relacionadas: []
 padroes_relacionados: []
 jiras_origem: []
@@ -43,7 +44,7 @@ Permitir o gerenciamento completo de notas fiscais de entrada e saída, incluind
 As validações e regras disponíveis na rotina incluem:
 
 - RN-00x-formas-pagamento — **Formas de Pagamento Permitidas:** O pagamento da nota pode ser registrado através de 6 formas: Dinheiro (à vista), Cheque (em cheque), Cartão (crédito/débito), Duplicata/Boleto (a prazo), Conta Pessoal (saldo liberado ao portador) e Outros (convênios da empresa).
-- RN-00x-rateio-frete — **Critérios de Rateio de Frete:** O valor de frete e despesas pode ser distribuído proporcionalmente com base em três modalidades de cálculo definidas na aba Detalhes: por Valor da mercadoria, por Quantidade de itens ou por Peso Bruto.
+- [[RN-004-rateio-proporcional-itens]] — **Rateio de Despesas Acessórias:** Distribui de forma proporcional os valores de frete e despesas adicionais entre os produtos do grid com base em Valor, Peso Bruto ou Quantidade
 - RN-00x-bonificacao-produtos — **Tratamento de Bonificações:** Se a flag Bonificação estiver marcada, o valor do item correspondente é deduzido do total final da nota fiscal, e sua tributação seguirá o cadastro específico de bonificações definido na Configuração de Documento.
 - RN-00x-numeracao-e-serie — **Sequenciamento de Série e Numeração:** A série é associada de forma automática à configuração do documento. O número oficial do documento permanece em `0` (rascunho) e só é preenchido definitivamente após a autorização da nota junto à Sefaz.
 - RN-00x-emissao-a-partir-de — **Notas Referenciadas (A partir de):** Para emitir uma nota referenciando outros documentos (como devoluções ou vendas de cupom fiscal), o documento de origem correspondente já deve estar previamente lançado e ativo no Viasuper.
@@ -62,12 +63,41 @@ As validações e regras disponíveis na rotina incluem:
 
 ---
 
-### 4.2. Gerando e Emitindo uma Nota Fiscal (Venda de Mercadoria)
+### 4.2.1 Gerando e Emitindo uma Nota Fiscal (Venda)
 
 1. Na janela **Consulta: Nota**, clicar em **Incluir** (ou usar o atalho **Ctrl + Ins**).
 2. No campo **Configuração**, informar a parametrização de documento (atalho **F3** abre a pesquisa. Ex: *"201 – Venda de mercadoria adquirida ou recebida de terceiros"*).
 3. Informar as datas de **Emissão** e **Entrada/Saída**.
 4. No campo **Cliente**, pesquisar pelo nome (atalho **F3**), código interno ou informar CPF/CNPJ.
+5. No grid de produtos, clicar em **Incluir um novo item** (ou usar o atalho **Ctrl + N**) para abrir a janela de inclusão de produto:
+    - Buscar o produto por código, código de barras ou nome.
+    - Opcionalmente, selecionar Embalagem e Local de Estoque.
+    - Informar a **Quantidade** e o **Valor Unitário**.
+    - Informar descontos em valor absoluto ou percentual, se aplicável.
+    - Marcar a flag **Bonificação** se o item for bonificado (isso desconta o valor do item no total da nota e aplica regras fiscais dedicadas).
+    - Para manter a tela aberta e lançar mais produtos sequencialmente, marcar a flag **Continuar incluindo**.
+    - Clicar em **Salvar** na janela de inclusão de itens.
+6. (Opcional) Conferir as informações adicionais nas seguintes abas:
+    - **Aba 2-Detalhes:** Conferir dados de entrega do cadastro de pessoa e definir a base de cálculo do frete (Valor, Quantidade ou Peso Bruto).
+    - **Aba 3-Transporte:** Cadastrar dados de transportadora, placa do veículo, tipo de frete e peso bruto/líquido.
+    - **Aba 4-Impostos:** Validar bases de cálculo, alíquotas e valores de ICMS, ICMS ST, PIS, COFINS, IPI Importação e Ajustes Fiscais.
+    - **Aba 5-Mensagens:** Informar dados e observações destinadas ao Fisco ou de cunho comercial.
+    - **Aba 6-Impostos Retidos:** Validar as retenções geradas.
+    - **Aba 7-Nfe/NFCe:** Validar chaves de acesso, dados da NF-e e documentos referenciados.
+7. Clicar no botão **Pagamento** no cabeçalho e selecionar o meio correspondente (Dinheiro, Cheque, Cartão, Duplicata/Boleto, Conta Pessoal ou Outros), digitando o respectivo valor. Clicar em **OK** para confirmar.
+8. Salvar o documento clicando em **Salvar** (ou atalho **Ctrl + S**).
+9. Clicar em **Transmitir**. O sistema gerará a chave de acesso e transmitirá o arquivo XML para validação e autorização da Sefaz.
+10. O sistema enviará o Danfe e o XML por e-mail para o cliente (caso esteja devidamente configurado no cadastro de pessoas).
+11. Responder se deseja imprimir o Danfe na mensagem exibida em tela. Caso clique em "Não", a impressão ou reenvio poderão ser executados posteriormente no menu *Gera xml / Imprime Danfe*.
+
+---
+
+### 4.2.2 Gerando e Emitindo uma Nota Fiscal (Compra)
+
+1. Na janela **Consulta: Nota**, clicar em **Incluir** (ou usar o atalho **Ctrl + Ins**).
+2. No campo **Configuração**, informar a parametrização de documento (atalho **F3** abre a pesquisa. Ex: *"202 – Compra de mercadoria recebida de terceiros"*).
+3. Informar as datas de **Emissão** e **Entrada/Saída**.
+4. No campo **Fornecedor**, pesquisar pelo nome (atalho **F3**), código interno ou informar CPF/CNPJ.
 5. No grid de produtos, clicar em **Incluir um novo item** (ou usar o atalho **Ctrl + N**) para abrir a janela de inclusão de produto:
     - Buscar o produto por código, código de barras ou nome.
     - Opcionalmente, selecionar Embalagem e Local de Estoque.
@@ -86,8 +116,7 @@ As validações e regras disponíveis na rotina incluem:
 7. Clicar no botão **Pagamento** no cabeçalho e selecionar o meio correspondente (Dinheiro, Cheque, Cartão, Duplicata/Boleto, Conta Pessoal ou Outros), digitando o respectivo valor. Clicar em **OK** para confirmar.
 8. Salvar o documento clicando em **Salvar** (ou atalho **Ctrl + S**).
 9. Clicar em **Transmitir**. O sistema gerará a chave de acesso e transmitirá o arquivo XML para validação e autorização da Sefaz.
-10. O sistema enviará o Danfe e o XML por e-mail para o cliente (caso esteja devidamente configurado no cadastro de pessoas).
-11. Responder se deseja imprimir o Danfe na mensagem exibida em tela. Caso clique em "Não", a impressão ou reenvio poderão ser executados posteriormente no menu *Gera xml / Imprime Danfe*.
+10. Responder se deseja imprimir o Danfe na mensagem exibida em tela.
 
 ---
 

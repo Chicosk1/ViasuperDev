@@ -36,7 +36,7 @@ data_revisao: "2026-05-21"
 | [[RN-001-filtro-data-obrigatorio]] | Filtro de intervalo de datas obrigatório na busca de duplicatas | media |
 | [[RN-002-duplicatas-elegiveis]] | Somente duplicatas com valores de ajuste são elegíveis para geração de notas | alta |
 | [[RN-003-calculo-base-ajuste-ibs-cbs]] | Cálculo automático da Base IBS/CBS a Ajustar | alta |
-| [[RN-004-rateio-proporcional-itens]] | Rateio proporcional de IBS/CBS nos itens da nota de origem | alta |
+| [[RN-004-rateio-proporcional-itens]] | Rateio proporcional de valores nos itens do documento | alta |
 | [[RN-005-item-imposto-menor-centavo]] | Itens com imposto calculado inferior a R$ 0,01 não são incluídos na nota gerada | media |
 | [[RN-006-configuracao-documento-finalidade]] | Configuração de documento deve ter finalidade Nota de Crédito ou Nota de Débito | media |
 

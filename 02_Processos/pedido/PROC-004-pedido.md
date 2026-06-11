@@ -15,7 +15,8 @@ tags:
   - compras
   - pdv
   - viasuper
-rns_relacionadas: []
+rns_relacionadas:
+  - RN-004
 arquiteturas_relacionadas: []
 padroes_relacionados: []
 jiras_origem: []
@@ -55,6 +56,7 @@ As validações e regras disponíveis na rotina de Pedidos e Cotações incluem:
 - RN-00x-sugestao-melhor-fornecedor — **Homologação pelo Menor Valor Global:** O sistema analisa os retornos das planilhas importadas e sugere na aba "Melhor Fornecedor" aquele que apresenta o menor custo total somado para todos os itens da cotação.
 - RN-00x-sugestao-melhor-preco-item — **Homologação pelo Menor Preço por Item:** O sistema classifica individualmente por item o participante com o menor preço proposto, permitindo fracionar o faturamento e gerar múltiplos pedidos de compra direcionados.
 - RN-00x-recalculo-tributacao-pedido — **Recálculo de Impostos no Pedido:** Caso haja alterações nas configurações e alíquotas fiscais do ERP após o lançamento do pedido, o sistema permite recalcular e ajustar os impostos dos itens a qualquer momento antes da finalização e faturamento do pedido.
+- [[RN-004-rateio-proporcional-itens]] — **Rateio Proporcional nos Itens do Pedido:** Valores globais do pedido (como frete, seguro, desconto global e despesas acessórias) são distribuídos proporcionalmente entre os itens com base na participação de cada um no valor total do documento.
 
 ## 4. Fluxo do Processo
 

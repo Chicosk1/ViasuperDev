@@ -81,7 +81,7 @@ data_revisao: "2026-05-21"
 ### Alíquota
 
 - **Definição:** Percentual aplicado sobre a base de cálculo para determinar o valor do imposto devido.
-- **Contexto de uso:** Configurada por no cadastro de Tributações, possuindo variaveis de acordo com cada Imposto (IVA, ICMS, PIS, COFINS, etc...). Utilizada no rateio proporcional de IBS/CBS nos itens da nota de crédito/débito gerada — conforme [[RN-004-rateio-proporcional-itens]].
+- **Contexto de uso:** Configurada no cadastro de Tributações, possuindo variáveis de acordo com cada Imposto (IVA, ICMS, PIS, COFINS, etc...). Utilizada no rateio proporcional de valores nos itens do documento (notas, pedidos, cupons, importação de XML, entre outros) — conforme [[RN-004-rateio-proporcional-itens]].
 - **Sinônimos / variações:** Alíquota efetiva, taxa
 - **Não confundir com:** [[GLOS-nota#Base]]
 
@@ -90,7 +90,7 @@ data_revisao: "2026-05-21"
 ### Redução de Base de Cálculo
 
 - **Definição:** Percentual pelo qual a base de um imposto é reduzida antes da aplicação da alíquota, diminuindo o valor efetivo do tributo sem alterar a alíquota nominal.
-- **Contexto de uso:** Deve ser respeitada no cálculo dos valores de IBS e CBS após o rateio proporcional nos itens da nota de crédito/débito — conforme [[RN-004-rateio-proporcional-itens]].
+- **Contexto de uso:** Deve ser respeitada no cálculo dos valores de IBS e CBS após o rateio proporcional nos itens do documento (notas, pedidos, cupons, entre outros) — conforme [[RN-004-rateio-proporcional-itens]].
 - **Sinônimos / variações:** Redução de base, benefício fiscal
 
 ---

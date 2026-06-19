@@ -1,0 +1,2306 @@
+{
+  "info": {
+    "_postman_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+    "name": "Viasuper Titan - TMS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38872675",
+    "description": "API TMS XData do Viasuper edição Titan. Mesma estrutura do Padrão TMS. Preencher `base_url_tms`, `tms_user`, `tms_password` e `integradorKey` no ambiente."
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST Autenticar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"AUser\": \"{{tms_user}}\",\n  \"APassword\": \"{{tms_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/AuthWebService/Autenticar",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "AuthWebService",
+                "Autenticar"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// XData retorna { value: 'TOKEN' }",
+                  "var json = pm.response.json();",
+                  "var token = json.value || json.access_token || json.token || json.authToken;",
+                  "if (token) {",
+                  "    pm.environment.set('token', token);",
+                  "    pm.environment.set('token_tms_expires_at', Date.now() + 3600000);",
+                  "    console.log('Token TMS salvo.');",
+                  "} else {",
+                  "    console.warn('Token TMS não encontrado. Resposta:', JSON.stringify(json));",
+                  "}",
+                  "pm.test('Token retornado', function() {",
+                  "    pm.expect(token, 'token ausente na resposta').to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Status do Servidor",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/ServerMethodsGeral/Status",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "ServerMethodsGeral",
+                "Status"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "GET Consultar Limite de Crédito",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/ClienteWs/ConsultaLimite?AEstab=&AIdPess=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "ClienteWs",
+                "ConsultaLimite"
+              ],
+              "query": [
+                {
+                  "key": "AEstab",
+                  "value": ""
+                },
+                {
+                  "key": "AIdPess",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Cliente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/ClienteWs/GetCliente?aFilter=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "ClienteWs",
+                "GetCliente"
+              ],
+              "query": [
+                {
+                  "key": "aFilter",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Pessoa Comissionada",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/ClienteWs/GetPessoaComissionado?aFilter=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "ClienteWs",
+                "GetPessoaComissionado"
+              ],
+              "query": [
+                {
+                  "key": "aFilter",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Duplicatas",
+      "item": [
+        {
+          "name": "Receber",
+          "item": [
+            {
+              "name": "GET Listar Duplicatas a Receber",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "IntegradorKey",
+                    "value": "{{integradorKey}}"
+                  },
+                  {
+                    "key": "database-name",
+                    "value": "{{database}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/duplicata-receber?Estabs=&Top=100&Skip=0",
+                  "host": [
+                    "{{base_url_tms}}"
+                  ],
+                  "path": [
+                    "viasoft",
+                    "api",
+                    "vshub",
+                    "v1",
+                    "duplicata-receber"
+                  ],
+                  "query": [
+                    {
+                      "key": "Estabs",
+                      "value": ""
+                    },
+                    {
+                      "key": "Top",
+                      "value": "100"
+                    },
+                    {
+                      "key": "Skip",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Buscar Duplicata a Receber por ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "IntegradorKey",
+                    "value": "{{integradorKey}}"
+                  },
+                  {
+                    "key": "database-name",
+                    "value": "{{database}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/duplicata-receber/:estab|nrodup",
+                  "host": [
+                    "{{base_url_tms}}"
+                  ],
+                  "path": [
+                    "viasoft",
+                    "api",
+                    "vshub",
+                    "v1",
+                    "duplicata-receber",
+                    ":estab|nrodup"
+                  ],
+                  "variable": [
+                    {
+                      "key": "estab|nrodup",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Criar Duplicata a Receber",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "IntegradorKey",
+                    "value": "{{integradorKey}}"
+                  },
+                  {
+                    "key": "database-name",
+                    "value": "{{database}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"Estab\": 0,\n  \"NroDuplicata\": \"\",\n  \"NroFatura\": \"\",\n  \"Pessoa\": 0,\n  \"Emissao\": \"\",\n  \"Vencimento\": \"\",\n  \"Valor\": 0.0,\n  \"ContaFinanceira\": \"\",\n  \"Historico\": \"\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/duplicata-receber",
+                  "host": [
+                    "{{base_url_tms}}"
+                  ],
+                  "path": [
+                    "viasoft",
+                    "api",
+                    "vshub",
+                    "v1",
+                    "duplicata-receber"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "PUT Atualizar Duplicata a Receber",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "IntegradorKey",
+                    "value": "{{integradorKey}}"
+                  },
+                  {
+                    "key": "database-name",
+                    "value": "{{database}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"Estab\": 0,\n  \"NroDuplicata\": \"\",\n  \"Vencimento\": \"\",\n  \"Valor\": 0.0\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/duplicata-receber/:estab|id",
+                  "host": [
+                    "{{base_url_tms}}"
+                  ],
+                  "path": [
+                    "viasoft",
+                    "api",
+                    "vshub",
+                    "v1",
+                    "duplicata-receber",
+                    ":estab|id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "estab|id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE Excluir Duplicata a Receber",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "IntegradorKey",
+                    "value": "{{integradorKey}}"
+                  },
+                  {
+                    "key": "database-name",
+                    "value": "{{database}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/duplicata-receber/:estab|id",
+                  "host": [
+                    "{{base_url_tms}}"
+                  ],
+                  "path": [
+                    "viasoft",
+                    "api",
+                    "vshub",
+                    "v1",
+                    "duplicata-receber",
+                    ":estab|id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "estab|id",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Pagar",
+          "item": [
+            {
+              "name": "GET Listar Duplicatas a Pagar",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "IntegradorKey",
+                    "value": "{{integradorKey}}"
+                  },
+                  {
+                    "key": "database-name",
+                    "value": "{{database}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/duplicata-pagar?Estabs=&Top=100&Skip=0",
+                  "host": [
+                    "{{base_url_tms}}"
+                  ],
+                  "path": [
+                    "viasoft",
+                    "api",
+                    "vshub",
+                    "v1",
+                    "duplicata-pagar"
+                  ],
+                  "query": [
+                    {
+                      "key": "Estabs",
+                      "value": ""
+                    },
+                    {
+                      "key": "Top",
+                      "value": "100"
+                    },
+                    {
+                      "key": "Skip",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Buscar Duplicata a Pagar por ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "IntegradorKey",
+                    "value": "{{integradorKey}}"
+                  },
+                  {
+                    "key": "database-name",
+                    "value": "{{database}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/duplicata-pagar/:estab|nrodup",
+                  "host": [
+                    "{{base_url_tms}}"
+                  ],
+                  "path": [
+                    "viasoft",
+                    "api",
+                    "vshub",
+                    "v1",
+                    "duplicata-pagar",
+                    ":estab|nrodup"
+                  ],
+                  "variable": [
+                    {
+                      "key": "estab|nrodup",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE Excluir Lançamento Financeiro",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "IntegradorKey",
+                    "value": "{{integradorKey}}"
+                  },
+                  {
+                    "key": "database-name",
+                    "value": "{{database}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url_tms}}/viasoft/api/ServerMethodsFinanceiro/DelLanFin?AEstab=&AIdLanFin=&ADtLanca=",
+                  "host": [
+                    "{{base_url_tms}}"
+                  ],
+                  "path": [
+                    "viasoft",
+                    "api",
+                    "ServerMethodsFinanceiro",
+                    "DelLanFin"
+                  ],
+                  "query": [
+                    {
+                      "key": "AEstab",
+                      "value": ""
+                    },
+                    {
+                      "key": "AIdLanFin",
+                      "value": ""
+                    },
+                    {
+                      "key": "ADtLanca",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Utils",
+      "item": [
+        {
+          "name": "GET Listar UFs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/uf",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "uf"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar UF por Sigla",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/uf/:sigla",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "uf",
+                ":sigla"
+              ],
+              "variable": [
+                {
+                  "key": "sigla",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Centros de Custo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/centrocusto?Estabs=&Top=100&Skip=0",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "v1",
+                "centrocusto"
+              ],
+              "query": [
+                {
+                  "key": "Estabs",
+                  "value": ""
+                },
+                {
+                  "key": "Top",
+                  "value": "100"
+                },
+                {
+                  "key": "Skip",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Consulta Genérica (SQL)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/ApiGenericaWs/Consultas?Nome=&Campos=*&Condicao=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "ApiGenericaWs",
+                "Consultas"
+              ],
+              "query": [
+                {
+                  "key": "Nome",
+                  "value": ""
+                },
+                {
+                  "key": "Campos",
+                  "value": "*"
+                },
+                {
+                  "key": "Condicao",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Imprimir Pré-Venda",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"aEstab\": 0,\n  \"aPedido\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/PedidoRapViewerWs/ImprimirPreVenda",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "PedidoRapViewerWs",
+                "ImprimirPreVenda"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Gravar Pagamento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/PedidoPagamentoRepositorioWs/GravaPagamento",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "PedidoPagamentoRepositorioWs",
+                "GravaPagamento"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "End-to-End",
+      "item": []
+    },
+    {
+      "name": "Produtos",
+      "item": [
+        {
+          "name": "GET Listar Produtos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/produto?Top=100&Skip=0",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "v1",
+                "produto"
+              ],
+              "query": [
+                {
+                  "key": "Top",
+                  "value": "100"
+                },
+                {
+                  "key": "Skip",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Produto por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/produto/:id",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "v1",
+                "produto",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Produto por Código de Barras",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/ProdutoWs/GetProduto?AcBarra=&AnIdEstab=&AnPessoa=&AcOperacao=&AnIdConfigNota=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "ProdutoWs",
+                "GetProduto"
+              ],
+              "query": [
+                {
+                  "key": "AcBarra",
+                  "value": ""
+                },
+                {
+                  "key": "AnIdEstab",
+                  "value": ""
+                },
+                {
+                  "key": "AnPessoa",
+                  "value": ""
+                },
+                {
+                  "key": "AcOperacao",
+                  "value": ""
+                },
+                {
+                  "key": "AnIdConfigNota",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Produto - Preço Normal",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/ProdutoWs/GetProdutoPrecoNormal?aBarra=&aidEstab=&aPessoa=&aOperacao=&aIdConfigNota=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "ProdutoWs",
+                "GetProdutoPrecoNormal"
+              ],
+              "query": [
+                {
+                  "key": "aBarra",
+                  "value": ""
+                },
+                {
+                  "key": "aidEstab",
+                  "value": ""
+                },
+                {
+                  "key": "aPessoa",
+                  "value": ""
+                },
+                {
+                  "key": "aOperacao",
+                  "value": ""
+                },
+                {
+                  "key": "aIdConfigNota",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pedidos",
+      "item": [
+        {
+          "name": "GET Listar Pedidos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/pedido?Estabs=&Top=100&Skip=0",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "v1",
+                "pedido"
+              ],
+              "query": [
+                {
+                  "key": "Estabs",
+                  "value": ""
+                },
+                {
+                  "key": "Top",
+                  "value": "100"
+                },
+                {
+                  "key": "Skip",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Pedido por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/pedido/:estab|id",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "v1",
+                "pedido",
+                ":estab|id"
+              ],
+              "variable": [
+                {
+                  "key": "estab|id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Pedidos (PDV)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/PedidoPDVWs/Pedidos?AEstab=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "PedidoPDVWs",
+                "Pedidos"
+              ],
+              "query": [
+                {
+                  "key": "AEstab",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Pedido (PDV)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/PedidoPDVWs/Pedido?aEstab=&AIdPedido=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "PedidoPDVWs",
+                "Pedido"
+              ],
+              "query": [
+                {
+                  "key": "aEstab",
+                  "value": ""
+                },
+                {
+                  "key": "AIdPedido",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Pedido por Comanda (PDV)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/PedidoPDVWs/PedidoComanda?aEstab=&AIDComanda=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "PedidoPDVWs",
+                "PedidoComanda"
+              ],
+              "query": [
+                {
+                  "key": "aEstab",
+                  "value": ""
+                },
+                {
+                  "key": "AIDComanda",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Incluir Pedido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/PedidoRapRepositorioWs/IncluirPedido",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "PedidoRapRepositorioWs",
+                "IncluirPedido"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Carregar Pedido",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/PedidoRapRepositorioWs/CarregaPedido?AEstab=&aIdPedido=&AcSerie=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "PedidoRapRepositorioWs",
+                "CarregaPedido"
+              ],
+              "query": [
+                {
+                  "key": "AEstab",
+                  "value": ""
+                },
+                {
+                  "key": "aIdPedido",
+                  "value": ""
+                },
+                {
+                  "key": "AcSerie",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Gerar Nota pelo Pedido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"AnEstab\": 0,\n  \"AnIdPedido\": 0,\n  \"AbGeraAcertoAposGerPedido\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/PedidoRapRepositorioWs/IncluirNotaByPedido",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "PedidoRapRepositorioWs",
+                "IncluirNotaByPedido"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Validar Comanda",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/PedidoRapRepositorioWs/ValidarComandaJaExiste?AnEstab=&AnIdPedido=&AcSerie=&AcComanda=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "PedidoRapRepositorioWs",
+                "ValidarComandaJaExiste"
+              ],
+              "query": [
+                {
+                  "key": "AnEstab",
+                  "value": ""
+                },
+                {
+                  "key": "AnIdPedido",
+                  "value": ""
+                },
+                {
+                  "key": "AcSerie",
+                  "value": ""
+                },
+                {
+                  "key": "AcComanda",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Carregar Config. do Pedido",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/PedidoConfiguracaoWs/CarregaConfigPedido?AEstab=&IdPedidoCfg=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "PedidoConfiguracaoWs",
+                "CarregaConfigPedido"
+              ],
+              "query": [
+                {
+                  "key": "AEstab",
+                  "value": ""
+                },
+                {
+                  "key": "IdPedidoCfg",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pessoas",
+      "item": [
+        {
+          "name": "GET Listar Pessoas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/pessoa?Top=100&Skip=0",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "v1",
+                "pessoa"
+              ],
+              "query": [
+                {
+                  "key": "Top",
+                  "value": "100"
+                },
+                {
+                  "key": "Skip",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Pessoa por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/pessoa/:id",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "v1",
+                "pessoa",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Pessoas (PDV)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/PessoaPDVWs/Pessoas?AEstab=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "PessoaPDVWs",
+                "Pessoas"
+              ],
+              "query": [
+                {
+                  "key": "AEstab",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Pessoa (PDV)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/PessoaPDVWs/Pessoa?AEstab=&ATipoPesquisa=&AValor=",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "PessoaPDVWs",
+                "Pessoa"
+              ],
+              "query": [
+                {
+                  "key": "AEstab",
+                  "value": ""
+                },
+                {
+                  "key": "ATipoPesquisa",
+                  "value": ""
+                },
+                {
+                  "key": "AValor",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Estoques",
+      "item": [
+        {
+          "name": "GET Consultar Estoque",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/v1/estoque?Estabs=&Top=100&Skip=0",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "v1",
+                "estoque"
+              ],
+              "query": [
+                {
+                  "key": "Estabs",
+                  "value": ""
+                },
+                {
+                  "key": "Top",
+                  "value": "100"
+                },
+                {
+                  "key": "Skip",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Precos",
+      "item": [
+        {
+          "name": "GET Listar Preços de Produtos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/produto-preco?Estabs=&Top=100&Skip=0",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "produto-preco"
+              ],
+              "query": [
+                {
+                  "key": "Estabs",
+                  "value": ""
+                },
+                {
+                  "key": "Top",
+                  "value": "100"
+                },
+                {
+                  "key": "Skip",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cidades",
+      "item": [
+        {
+          "name": "GET Listar Cidades",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/Cidade?Top=100&Skip=0",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "Cidade"
+              ],
+              "query": [
+                {
+                  "key": "Top",
+                  "value": "100"
+                },
+                {
+                  "key": "Skip",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Cidade por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/Cidade/:id",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "Cidade",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Portal Doc",
+      "item": [
+        {
+          "name": "POST Autenticar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"AUser\": \"{{tms_user}}\",\n  \"APassword\": \"{{tms_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_portaldoc}}/viasoft/api/AuthWebService/Autenticar",
+              "host": [
+                "{{base_url_portaldoc}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "AuthWebService",
+                "Autenticar"
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// XData retorna { value: 'TOKEN' }",
+                  "var json = pm.response.json();",
+                  "var token = json.value || json.access_token || json.token || json.authToken;",
+                  "if (token) {",
+                  "    pm.environment.set('token', token);",
+                  "    pm.environment.set('token_tms_expires_at', Date.now() + 3600000);",
+                  "    console.log('Token TMS salvo.');",
+                  "} else {",
+                  "    console.warn('Token TMS não encontrado. Resposta:', JSON.stringify(json));",
+                  "}",
+                  "pm.test('Token retornado', function() {",
+                  "    pm.expect(token, 'token ausente na resposta').to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DFe",
+          "item": [
+            {
+              "name": "POST Listar NFe",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "IntegradorKey",
+                    "value": "{{integradorKey}}"
+                  },
+                  {
+                    "key": "database-name",
+                    "value": "{{database}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"Cnpj\": \"\",\n  \"Nsu\": \"\",\n  \"Restric1\": \"\",\n  \"Restric2\": \"\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url_portaldoc}}/viasoft/api/DFeWs/NFeLista",
+                  "host": [
+                    "{{base_url_portaldoc}}"
+                  ],
+                  "path": [
+                    "viasoft",
+                    "api",
+                    "DFeWs",
+                    "NFeLista"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Listar NSU",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "IntegradorKey",
+                    "value": "{{integradorKey}}"
+                  },
+                  {
+                    "key": "database-name",
+                    "value": "{{database}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"Cnpj\": \"\",\n  \"Tipo\": \"\",\n  \"Filtro\": \"\",\n  \"Valor\": \"\",\n  \"Restric1\": \"\",\n  \"Restric2\": \"\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url_portaldoc}}/viasoft/api/DFeWs/NsuLista",
+                  "host": [
+                    "{{base_url_portaldoc}}"
+                  ],
+                  "path": [
+                    "viasoft",
+                    "api",
+                    "DFeWs",
+                    "NsuLista"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Filiais",
+      "item": [
+        {
+          "name": "GET Listar Filiais",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/Filial?Top=100&Skip=0",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "Filial"
+              ],
+              "query": [
+                {
+                  "key": "Top",
+                  "value": "100"
+                },
+                {
+                  "key": "Skip",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Filial por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/Filial/:id",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "Filial",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Empresas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/Empresa?Top=100&Skip=0",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "Empresa"
+              ],
+              "query": [
+                {
+                  "key": "Top",
+                  "value": "100"
+                },
+                {
+                  "key": "Skip",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Empresa por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_tms}}/viasoft/api/vshub/Empresa/:id",
+              "host": [
+                "{{base_url_tms}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "vshub",
+                "Empresa",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "var token    = pm.environment.get('token');",
+          "var expiry   = pm.environment.get('token_tms_expires_at');",
+          "var expired  = !token || (expiry && Date.now() >= Number(expiry) - 30000);",
+          "",
+          "if (expired) {",
+          "    var base = pm.environment.get('base_url_tms');",
+          "    var user = pm.environment.get('tms_user');",
+          "    var pwd  = pm.environment.get('tms_password');",
+          "    if (!base || !user || !pwd) return; // credenciais não configuradas",
+          "",
+          "    pm.sendRequest({",
+          "        url: base + '/viasoft/api/AuthWebService/Autenticar',",
+          "        method: 'POST',",
+          "        header: { 'Content-Type': 'application/json' },",
+          "        body: { mode: 'raw', raw: JSON.stringify({ AUser: user, APassword: pwd }) }",
+          "    }, function(err, res) {",
+          "        if (err) { console.error('Erro refresh TMS:', err); return; }",
+          "        var j = res.json();",
+          "        var t = j.value || j.access_token || j.token;",
+          "        if (t) {",
+          "            pm.environment.set('token', t);",
+          "            pm.environment.set('token_tms_expires_at', Date.now() + 3600000);",
+          "            console.log('Token TMS renovado automaticamente.');",
+          "        }",
+          "    });",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Status code 2xx', function() {",
+          "    pm.response.to.be.success;",
+          "});",
+          "",
+          "pm.test('Tempo de resposta < 3s', function() {",
+          "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+          "});",
+          "",
+          "var ct = pm.response.headers.get('Content-Type');",
+          "if (ct && ct.includes('application/json')) {",
+          "    pm.test('JSON válido', function() { pm.response.to.be.json; });",
+          "}"
+        ]
+      }
+    }
+  ]
+}

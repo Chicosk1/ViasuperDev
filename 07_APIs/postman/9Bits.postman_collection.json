@@ -1,0 +1,118 @@
+{
+  "info": {
+    "_postman_id": "b9c0d1e2-f3a4-5678-bcde-901234567890",
+    "name": "9Bits",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38872675",
+    "description": "API de e-commerce 9Bits. Autenticação Bearer Token. Preencher `base_url_9bits` e `token` no ambiente."
+  },
+  "item": [
+    {
+      "name": "Pedidos",
+      "item": [
+        {
+          "name": "GET Buscar Pedidos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_9bits}}/api/pedidos/:companyId/",
+              "host": [
+                "{{base_url_9bits}}"
+              ],
+              "path": [
+                "api",
+                "pedidos",
+                ":companyId",
+                ""
+              ],
+              "variable": [
+                {
+                  "key": "companyId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Atualizar Status do Pedido",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 29908,\n  \"status\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_9bits}}/api/pedido/atualizar-status/",
+              "host": [
+                "{{base_url_9bits}}"
+              ],
+              "path": [
+                "api",
+                "pedido",
+                "atualizar-status",
+                ""
+              ]
+            },
+            "description": "Atualiza o status de um pedido. Status: 1=Pendente, 2=Em preparo, 3=Enviado, 4=Entregue, 5=Cancelado"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url_9bits",
+      "value": "https://supermercado.primato.com.br"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Status code 2xx', function() {",
+          "    pm.response.to.be.success;",
+          "});",
+          "",
+          "pm.test('Tempo de resposta < 3s', function() {",
+          "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+          "});",
+          "",
+          "var ct = pm.response.headers.get('Content-Type');",
+          "if (ct && ct.includes('application/json')) {",
+          "    pm.test('JSON válido', function() { pm.response.to.be.json; });",
+          "}"
+        ]
+      }
+    }
+  ]
+}

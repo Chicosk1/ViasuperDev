@@ -1,0 +1,431 @@
+{
+  "info": {
+    "_postman_id": "a8b9c0d1-e2f3-4567-abcd-890123456789",
+    "name": "SGP (Prefeitura de Curitiba)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38872675",
+    "description": "API governamental SGP da Prefeitura de Curitiba para execução financeira (vendas, empenhos, autorizações). Autenticação Bearer com refresh automático. Preencher `base_url_sgp`, `sgp_username` e `sgp_password` no ambiente."
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST Autenticar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"{{sgp_username}}\",\n  \"senha\": \"{{sgp_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_sgp}}/sgp-api/api/rest/seguranca/auth/token",
+              "host": [
+                "{{base_url_sgp}}"
+              ],
+              "path": [
+                "sgp-api",
+                "api",
+                "rest",
+                "seguranca",
+                "auth",
+                "token"
+              ]
+            },
+            "description": "Autentica na API SGP. Token salvo automaticamente em `token`."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var json = pm.response.json();",
+                  "var token = json.token || json.access_token || json.accessToken;",
+                  "if (token) {",
+                  "    pm.environment.set('token', token);",
+                  "    pm.environment.set('token_sgp_expires_at', Date.now() + 3600000);",
+                  "    console.log('Token SGP salvo.');",
+                  "} else {",
+                  "    console.warn('Token SGP não encontrado. Resposta:', JSON.stringify(json));",
+                  "}",
+                  "pm.test('Token SGP retornado', function() {",
+                  "    pm.expect(token, 'token ausente na resposta').to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Execução Financeira",
+      "item": [
+        {
+          "name": "POST Enviar Venda",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idViaSuper\": \"1003|156417\",\n  \"dtHrMovto\": \"2023-06-05T04:06:56.000Z\",\n  \"nrCupomFiscal\": 1234,\n  \"idTpEmissao\": 1,\n  \"nrCaixa\": 1,\n  \"cdFilial\": \"1003\",\n  \"vlTotal\": 50.0,\n  \"vlDesconto\": 0.0,\n  \"vlTroco\": 0.0,\n  \"vlTaxaServico\": 0.0,\n  \"estornar\": \"N\",\n  \"itens\": [\n    {\n      \"nrItemCupom\": 1,\n      \"cdItemSgp\": 1001,\n      \"qtde\": 1.0,\n      \"vlUnitario\": 50.0,\n      \"vlDesconto\": 0.0,\n      \"vlTotal\": 50.0\n    }\n  ],\n  \"formasPagamento\": [\n    {\n      \"cdFormaPagamento\": 1,\n      \"vlPagamento\": 50.0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_sgp}}/sgp-api/api/rest/execucaoFinanceira/viaSuper/saidaVendaCupomFiscal",
+              "host": [
+                "{{base_url_sgp}}"
+              ],
+              "path": [
+                "sgp-api",
+                "api",
+                "rest",
+                "execucaoFinanceira",
+                "viaSuper",
+                "saidaVendaCupomFiscal"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Enviar Nota de Empenho",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idViaSuper\": \"1003|156417\",\n  \"dtHrMovto\": \"2023-06-05T04:06:56.000Z\",\n  \"nrNotaFiscal\": 9039,\n  \"idTpSerie\": 11,\n  \"serieNotaFiscal\": \"1\",\n  \"cdFilial\": \"1003\",\n  \"estornar\": \"N\",\n  \"empenhos\": [\n    {\n      \"cdItemSgp\": 1001,\n      \"qtde\": 10.0,\n      \"vlUnitario\": 5.0,\n      \"vlTotal\": 50.0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_sgp}}/sgp-api/api/rest/execucaoFinanceira/viaSuper/recebimentoNFItemFornecedorEmp",
+              "host": [
+                "{{base_url_sgp}}"
+              ],
+              "path": [
+                "sgp-api",
+                "api",
+                "rest",
+                "execucaoFinanceira",
+                "viaSuper",
+                "recebimentoNFItemFornecedorEmp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Enviar Autorização de Fornecimento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idViaSuper\": \"1003|156417\",\n  \"dtHrMovto\": \"2023-06-05T04:06:56.000Z\",\n  \"cdFilial\": \"1003\",\n  \"estornar\": \"N\",\n  \"autorizacoes\": [\n    {\n      \"cdItemSgp\": 1001,\n      \"qtde\": 10.0,\n      \"vlUnitario\": 5.0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_sgp}}/sgp-api/api/rest/execucaoFinanceira/viaSuper/recebimentoNfAutorizacaoForn",
+              "host": [
+                "{{base_url_sgp}}"
+              ],
+              "path": [
+                "sgp-api",
+                "api",
+                "rest",
+                "execucaoFinanceira",
+                "viaSuper",
+                "recebimentoNfAutorizacaoForn"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Enviar Movimentação de Estoque",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idViaSuper\": \"1003|156417|1\",\n  \"cdItem\": 1001,\n  \"cdArmazem\": 1003,\n  \"qtMovimentada\": 100,\n  \"vlUnitario\": 5.0,\n  \"dtHrMovto\": \"2023-06-05T04:06:56.000Z\",\n  \"cdFilial\": \"1003\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_sgp}}/sgp-api/api/rest/execucaoFinanceira/viaSuper/movimentacaoEstoqueFaac",
+              "host": [
+                "{{base_url_sgp}}"
+              ],
+              "path": [
+                "sgp-api",
+                "api",
+                "rest",
+                "execucaoFinanceira",
+                "viaSuper",
+                "movimentacaoEstoqueFaac"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Estornos",
+          "item": [
+            {
+              "name": "POST Estornar Venda",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idViaSuper\": \"1003|156417\",\n  \"dtHrMovto\": \"2023-06-05T04:06:56.000Z\",\n  \"nrCupomFiscal\": 1234,\n  \"cdFilial\": \"1003\",\n  \"estornar\": \"S\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url_sgp}}/sgp-api/api/rest/execucaoFinanceira/viaSuper/saidaVendaCupomFiscal",
+                  "host": [
+                    "{{base_url_sgp}}"
+                  ],
+                  "path": [
+                    "sgp-api",
+                    "api",
+                    "rest",
+                    "execucaoFinanceira",
+                    "viaSuper",
+                    "saidaVendaCupomFiscal"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Estornar Nota de Empenho",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idViaSuper\": \"1003|156417\",\n  \"nrNotaFiscal\": 9039,\n  \"idTpSerie\": 11,\n  \"serieNotaFiscal\": \"1\",\n  \"cdFilial\": \"1003\",\n  \"estornar\": \"S\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url_sgp}}/sgp-api/api/rest/execucaoFinanceira/viaSuper/recebimentoNFItemFornecedorEmp",
+                  "host": [
+                    "{{base_url_sgp}}"
+                  ],
+                  "path": [
+                    "sgp-api",
+                    "api",
+                    "rest",
+                    "execucaoFinanceira",
+                    "viaSuper",
+                    "recebimentoNFItemFornecedorEmp"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Estornar Autorização de Fornecimento",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idViaSuper\": \"1003|156417\",\n  \"cdFilial\": \"1003\",\n  \"estornar\": \"S\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url_sgp}}/sgp-api/api/rest/execucaoFinanceira/viaSuper/recebimentoNfAutorizacaoForn",
+                  "host": [
+                    "{{base_url_sgp}}"
+                  ],
+                  "path": [
+                    "sgp-api",
+                    "api",
+                    "rest",
+                    "execucaoFinanceira",
+                    "viaSuper",
+                    "recebimentoNfAutorizacaoForn"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url_sgp",
+      "value": "http://ici.curitiba.org.br"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "var token    = pm.environment.get('token');",
+          "var expiry   = pm.environment.get('token_sgp_expires_at');",
+          "var expired  = !token || (expiry && Date.now() >= Number(expiry) - 30000);",
+          "",
+          "if (expired) {",
+          "    var base = pm.environment.get('base_url_sgp');",
+          "    var user = pm.environment.get('sgp_username');",
+          "    var pwd  = pm.environment.get('sgp_password');",
+          "    if (!base || !user || !pwd) return;",
+          "",
+          "    pm.sendRequest({",
+          "        url: base + '/sgp-api/api/rest/seguranca/auth/token',",
+          "        method: 'POST',",
+          "        header: { 'Content-Type': 'application/json' },",
+          "        body: { mode: 'raw', raw: JSON.stringify({ login: user, senha: pwd }) }",
+          "    }, function(err, res) {",
+          "        if (err) { console.error('Erro refresh SGP:', err); return; }",
+          "        var j = res.json();",
+          "        var t = j.token || j.access_token;",
+          "        if (t) {",
+          "            pm.environment.set('token', t);",
+          "            pm.environment.set('token_sgp_expires_at', Date.now() + 3600000);",
+          "            console.log('Token SGP renovado automaticamente.');",
+          "        }",
+          "    });",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Status code 2xx', function() {",
+          "    pm.response.to.be.success;",
+          "});",
+          "",
+          "pm.test('Tempo de resposta < 3s', function() {",
+          "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+          "});",
+          "",
+          "var ct = pm.response.headers.get('Content-Type');",
+          "if (ct && ct.includes('application/json')) {",
+          "    pm.test('JSON válido', function() { pm.response.to.be.json; });",
+          "}"
+        ]
+      }
+    }
+  ]
+}

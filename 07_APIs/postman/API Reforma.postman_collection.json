@@ -1,0 +1,77 @@
+{
+  "info": {
+    "_postman_id": "c0d1e2f3-a4b5-6789-cdef-012345678901",
+    "name": "API Reforma (Governo Federal)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38872675",
+    "description": "API federal para cálculo de tributos CBS/IBS (Reforma Tributária). Endpoint público sem autenticação. URL fixa: piloto-cbs.tributos.gov.br."
+  },
+  "item": [
+    {
+      "name": "Calculadora",
+      "item": [
+        {
+          "name": "POST Calcular Consumo (Regime Geral)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://piloto-cbs.tributos.gov.br/servico/calculadora-consumo/api/calculadora/regime-geral",
+              "protocol": "https",
+              "host": [
+                "piloto-cbs",
+                "tributos",
+                "gov",
+                "br"
+              ],
+              "path": [
+                "servico",
+                "calculadora-consumo",
+                "api",
+                "calculadora",
+                "regime-geral"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Status code 2xx', function() {",
+          "    pm.response.to.be.success;",
+          "});",
+          "",
+          "pm.test('Tempo de resposta < 3s', function() {",
+          "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+          "});",
+          "",
+          "var ct = pm.response.headers.get('Content-Type');",
+          "if (ct && ct.includes('application/json')) {",
+          "    pm.test('JSON válido', function() { pm.response.to.be.json; });",
+          "}"
+        ]
+      }
+    }
+  ]
+}

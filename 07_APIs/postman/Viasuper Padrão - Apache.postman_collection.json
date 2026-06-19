@@ -1,0 +1,1640 @@
+{
+  "info": {
+    "_postman_id": "95efb054-9694-4933-bc95-59d0340be0ce",
+    "name": "Viasuper Padrão - Apache",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38872675",
+    "description": "API DataSnap (Delphi/Apache) do Viasuper edição Padrão. Autenticação via Basic Auth (header `Authorization: Basic {{authToken}}`). Variáveis obrigatórias no ambiente: `base_url_apache`, `apache_user`, `apache_password`."
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST Autenticar (Login Web)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"{{apache_user}}\",\n  \"password\": \"{{apache_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/UpdateLoginWeb",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "UpdateLoginWeb"
+              ]
+            },
+            "description": "Realiza login na API DataSnap. Salva o authToken automaticamente no ambiente."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// DataSnap retorna { result: ['TOKEN'] } ou { result: [true, 'TOKEN'] }",
+                  "var json = pm.response.json();",
+                  "var result = json.result;",
+                  "var token = Array.isArray(result)",
+                  "    ? result.find(function(r) { return typeof r === 'string'; })",
+                  "    : (json.authToken || json.token || json.value);",
+                  "if (token) {",
+                  "    pm.environment.set('authToken', token);",
+                  "    console.log('authToken Apache salvo.');",
+                  "} else {",
+                  "    console.warn('authToken não encontrado. Resposta:', JSON.stringify(json));",
+                  "}",
+                  "pm.test('Token retornado', function() {",
+                  "    pm.expect(token, 'token ausente na resposta').to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST Autenticar (Login Mobile)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"{{apache_user}}\",\n  \"password\": \"{{apache_password}}\",\n  \"versao\": \"1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/UpdateLoginMobile",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "UpdateLoginMobile"
+              ]
+            },
+            "description": "Realiza login Mobile na API DataSnap."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// DataSnap retorna { result: ['TOKEN'] } ou { result: [true, 'TOKEN'] }",
+                  "var json = pm.response.json();",
+                  "var result = json.result;",
+                  "var token = Array.isArray(result)",
+                  "    ? result.find(function(r) { return typeof r === 'string'; })",
+                  "    : (json.authToken || json.token || json.value);",
+                  "if (token) {",
+                  "    pm.environment.set('authToken', token);",
+                  "    console.log('authToken Apache salvo.');",
+                  "} else {",
+                  "    console.warn('authToken não encontrado. Resposta:', JSON.stringify(json));",
+                  "}",
+                  "pm.test('Token retornado', function() {",
+                  "    pm.expect(token, 'token ausente na resposta').to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Status do Servidor",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/Status",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "Status"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "GET Consultar Limite de Crédito",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ConsultaLimite?AEstab=&APessoaId=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "ConsultaLimite"
+              ],
+              "query": [
+                {
+                  "key": "AEstab",
+                  "value": ""
+                },
+                {
+                  "key": "APessoaId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Bloquear Limite",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"AEstab\": 0,\n  \"APdv\": 0,\n  \"ANumDoc\": 0,\n  \"AIdPess\": 0,\n  \"AIdOutros\": 0,\n  \"AData\": \"\",\n  \"AValor\": 0.0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/BloquearLimite",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "BloquearLimite"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Desbloquear Limite",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"AEstab\": 0,\n  \"APdv\": 0,\n  \"ANumDoc\": 0,\n  \"AIdPess\": 0,\n  \"AIdOutros\": 0,\n  \"AData\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/DesbloquearLimite",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "DesbloquearLimite"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Cadastrar Cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/UpdateCadastraCliente",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "UpdateCadastraCliente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Consultar Limite por Conceito",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/GET_LimiteConceito?TipoPessoa=&RendaTotal=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "GET_LimiteConceito"
+              ],
+              "query": [
+                {
+                  "key": "TipoPessoa",
+                  "value": ""
+                },
+                {
+                  "key": "RendaTotal",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Pesquisar por CPF (SIC)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/GET_SICPesquisaCPF?CPF=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "GET_SICPesquisaCPF"
+              ],
+              "query": [
+                {
+                  "key": "CPF",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Pesquisar por RG (SIC)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/GET_SICPesquisaRG?RG=&UF=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "GET_SICPesquisaRG"
+              ],
+              "query": [
+                {
+                  "key": "RG",
+                  "value": ""
+                },
+                {
+                  "key": "UF",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Pesquisar por Nome (SIC)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/GET_SICPesquisaNome?Nome=&DataNasc=&Sexo=&NomeMae=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "GET_SICPesquisaNome"
+              ],
+              "query": [
+                {
+                  "key": "Nome",
+                  "value": ""
+                },
+                {
+                  "key": "DataNasc",
+                  "value": ""
+                },
+                {
+                  "key": "Sexo",
+                  "value": ""
+                },
+                {
+                  "key": "NomeMae",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Consultar Contravale",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ConsultaContraVale?ANumContraVale=&AUserId=&AStore=&APdv=&ACupom=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "ConsultaContraVale"
+              ],
+              "query": [
+                {
+                  "key": "ANumContraVale",
+                  "value": ""
+                },
+                {
+                  "key": "AUserId",
+                  "value": ""
+                },
+                {
+                  "key": "AStore",
+                  "value": ""
+                },
+                {
+                  "key": "APdv",
+                  "value": ""
+                },
+                {
+                  "key": "ACupom",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Contravalse",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ConsultaContraVales?APessoaId=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "ConsultaContraVales"
+              ],
+              "query": [
+                {
+                  "key": "APessoaId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Bloquear Contravale",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ANumContraVale\": \"\",\n  \"AStore\": 0,\n  \"APdv\": 0,\n  \"ACupom\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/BloquearContraVale",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "BloquearContraVale"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Desbloquear Contravale",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ANumContraVale\": \"\",\n  \"AStore\": 0,\n  \"APdv\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/DesbloquearContraVale",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "DesbloquearContraVale"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Duplicatas",
+      "item": [
+        {
+          "name": "Receber",
+          "item": [
+            {
+              "name": "GET Listar Títulos em Aberto",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Basic {{authToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/TitulosAberto/:AEstab/:AIdPessoa",
+                  "host": [
+                    "{{base_url_apache}}"
+                  ],
+                  "path": [
+                    "datasnap",
+                    "rest",
+                    "TServerFuncoes",
+                    "TitulosAberto",
+                    ":AEstab",
+                    ":AIdPessoa"
+                  ],
+                  "variable": [
+                    {
+                      "key": "AEstab",
+                      "value": ""
+                    },
+                    {
+                      "key": "AIdPessoa",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Listar Títulos em Aberto (Sinergia)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Basic {{authToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/TitulosAbertoSinergia/:AEstab",
+                  "host": [
+                    "{{base_url_apache}}"
+                  ],
+                  "path": [
+                    "datasnap",
+                    "rest",
+                    "TServerFuncoes",
+                    "TitulosAbertoSinergia",
+                    ":AEstab"
+                  ],
+                  "variable": [
+                    {
+                      "key": "AEstab",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Pagar",
+          "item": []
+        }
+      ]
+    },
+    {
+      "name": "Utils",
+      "item": [
+        {
+          "name": "GET Buscar Logradouro por CEP",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/GET_Logradouro?CEP=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "GET_Logradouro"
+              ],
+              "query": [
+                {
+                  "key": "CEP",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Módulos Mobile Liberados",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ModulosMobileLiberados",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "ModulosMobileLiberados"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Ações do Usuário",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/UserAcoes?AUserId=&AValidaAutorizacao=true",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "UserAcoes"
+              ],
+              "query": [
+                {
+                  "key": "AUserId",
+                  "value": ""
+                },
+                {
+                  "key": "AValidaAutorizacao",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Imprimir Etiqueta (PNG)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ImprimeEtiquetaPNG?AIdItem=&ACodBarr=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "ImprimeEtiquetaPNG"
+              ],
+              "query": [
+                {
+                  "key": "AIdItem",
+                  "value": ""
+                },
+                {
+                  "key": "ACodBarr",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "End-to-End",
+      "item": []
+    },
+    {
+      "name": "Produtos",
+      "item": [
+        {
+          "name": "GET Buscar Produto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/GetProduto?AEstab=&AProduto=&ATipoCusto=&AIsConferencia=false",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "GetProduto"
+              ],
+              "query": [
+                {
+                  "key": "AEstab",
+                  "value": ""
+                },
+                {
+                  "key": "AProduto",
+                  "value": ""
+                },
+                {
+                  "key": "ATipoCusto",
+                  "value": ""
+                },
+                {
+                  "key": "AIsConferencia",
+                  "value": "false"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Pesquisar Produtos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/PesquisaProduto?ADescricao=&ALimit=50",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "PesquisaProduto"
+              ],
+              "query": [
+                {
+                  "key": "ADescricao",
+                  "value": ""
+                },
+                {
+                  "key": "ALimit",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Validar Item Mercado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/UpdateValidaItemMerc",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "UpdateValidaItemMerc"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Vincular Código de Barras ao Produto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/UpdateVincularCodigoBarraAoProduto",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "UpdateVincularCodigoBarraAoProduto"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Atualizar Custo do Produto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/UpdateCustoProduto",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "UpdateCustoProduto"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pedidos",
+      "item": [
+        {
+          "name": "GET Consultar Total Entregue do Pedido",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/PedidoTotEntregue?AEstab=&AComanda=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "PedidoTotEntregue"
+              ],
+              "query": [
+                {
+                  "key": "AEstab",
+                  "value": ""
+                },
+                {
+                  "key": "AComanda",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Marcar como Baixado no PDV",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"AEstab\": 0,\n  \"AComanda\": \"\",\n  \"ASituacao\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/UpdateBaixadoPdv",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "UpdateBaixadoPdv"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Confirmar Recebimento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estab\": 1,\n  \"numeronota\": \"\",\n  \"serienota\": \"\",\n  \"cnpjfornecedor\": \"\",\n  \"produtos\": [\n    {\n      \"iditem\": \"\",\n      \"quantidade\": 0,\n      \"lote\": \"\",\n      \"lotetipo\": \"\",\n      \"loteseq\": \"\",\n      \"dtfabricacao\": \"\",\n      \"dtvalidade\": \"\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ConfirmarRecebimento",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "ConfirmarRecebimento"
+              ]
+            },
+            "description": "Confirma o recebimento de uma nota fiscal via FORLOG."
+          },
+          "response": []
+        },
+        {
+          "name": "Integração FORLOG",
+          "item": [
+            {
+              "name": "POST Confirmar Separação do Pedido",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Basic {{authToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estab\": 0,\n  \"pedido\": \"\",\n  \"origem\": \"FORLOG\",\n  \"produtos\": [\n    {\n      \"iditem\": 0,\n      \"quantidade\": 0,\n      \"lote\": \"\",\n      \"lotetipo\": \"\",\n      \"loteseq\": 0\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ConfirmarSeparacaoPedido",
+                  "host": [
+                    "{{base_url_apache}}"
+                  ],
+                  "path": [
+                    "datasnap",
+                    "rest",
+                    "TServerFuncoes",
+                    "ConfirmarSeparacaoPedido"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Confirmar Separação do Pedido (Pallet)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Basic {{authToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estab\": 0,\n  \"idvolumeforlog\": \"\",\n  \"origem\": \"FORLOG\",\n  \"usuarioseparador\": \"\",\n  \"produtos\": [\n    {\n      \"iditem\": 0,\n      \"pedido\": \"\",\n      \"lote\": \"\",\n      \"quantidade\": 0,\n      \"seqlote\": 0,\n      \"tipo\": \"\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ConfimarSeparacaoPedidoPallet",
+                  "host": [
+                    "{{base_url_apache}}"
+                  ],
+                  "path": [
+                    "datasnap",
+                    "rest",
+                    "TServerFuncoes",
+                    "ConfimarSeparacaoPedidoPallet"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Finalizar Conferência",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Basic {{authToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"estab\": 0,\n  \"idvolumeforlog\": \"\",\n  \"origem\": \"FORLOG\",\n  \"usuarioseparador\": \"\",\n  \"produtos\": [\n    {\n      \"iditem\": 0,\n      \"pedido\": \"\",\n      \"lote\": \"\",\n      \"quantidade\": 0,\n      \"seqlote\": 0,\n      \"tipo\": \"\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/FinalizarConferencia",
+                  "host": [
+                    "{{base_url_apache}}"
+                  ],
+                  "path": [
+                    "datasnap",
+                    "rest",
+                    "TServerFuncoes",
+                    "FinalizarConferencia"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pessoas",
+      "item": [
+        {
+          "name": "GET Consultar Pessoa por CPF/CNPJ",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ConsultaPessoa?cpf=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "ConsultaPessoa"
+              ],
+              "query": [
+                {
+                  "key": "cpf",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Pessoas com Cadastro Vencido",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/GET_PessoaCadastroVencido?AData=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "GET_PessoaCadastroVencido"
+              ],
+              "query": [
+                {
+                  "key": "AData",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Tipos de Pessoa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/GET_TipoPessoa",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "GET_TipoPessoa"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Atualizar Cadastro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/updateAtualizarCadastro",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "updateAtualizarCadastro"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Estoques",
+      "item": [
+        {
+          "name": "GET Consultar Saldo do Produto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ConsultaSaldoProduto?AIdItem=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "ConsultaSaldoProduto"
+              ],
+              "query": [
+                {
+                  "key": "AIdItem",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Transferência de Estoque",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/UpdateTransferenciaEstoque",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "UpdateTransferenciaEstoque"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Transferência de Estoque (v2)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/UpdateTransferenciaDeEstoque",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "UpdateTransferenciaDeEstoque"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Transferência de Estoque (FORLOG)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/TransferenciaDeEstoque",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "TransferenciaDeEstoque"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Precos",
+      "item": [
+        {
+          "name": "GET Consultar Preço por EAN",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ConsultaPreco?web_loja=&ean=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "ConsultaPreco"
+              ],
+              "query": [
+                {
+                  "key": "web_loja",
+                  "value": ""
+                },
+                {
+                  "key": "ean",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cidades",
+      "item": [
+        {
+          "name": "GET Listar Cidades",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ConsultaCidades",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "ConsultaCidades"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Filiais",
+      "item": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Status code 2xx', function() {",
+          "    pm.response.to.be.success;",
+          "});",
+          "",
+          "pm.test('Tempo de resposta < 3s', function() {",
+          "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+          "});",
+          "",
+          "var ct = pm.response.headers.get('Content-Type');",
+          "if (ct && ct.includes('application/json')) {",
+          "    pm.test('JSON válido', function() { pm.response.to.be.json; });",
+          "}"
+        ]
+      }
+    }
+  ]
+}

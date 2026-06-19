@@ -1,0 +1,122 @@
+{
+  "info": {
+    "_postman_id": "d5e6f7a8-b9c0-1234-defa-567890123456",
+    "name": "Licenciamento Viasoft",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38872675",
+    "description": "API de licenciamento Viasoft. Consulta e consumo de licenças por tenant. Preencher `base_url_licenciamento` (padrão: clientehomepage.viasoft.com.br:1503) e `tenantId` no ambiente."
+  },
+  "item": [
+    {
+      "name": "Licenças",
+      "item": [
+        {
+          "name": "GET Consultar Status da Licença",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_licenciamento}}/licensing/license-server/licenses/:tenantId/legacy",
+              "host": [
+                "{{base_url_licenciamento}}"
+              ],
+              "path": [
+                "licensing",
+                "license-server",
+                "licenses",
+                ":tenantId",
+                "legacy"
+              ],
+              "variable": [
+                {
+                  "key": "tenantId",
+                  "value": "{{tenantId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Consumir Licença (Login)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"appIdentifier\": \"\",\n  \"user\": \"\",\n  \"cnpj\": \"\",\n  \"customAppName\": \"\",\n  \"Sid\": \"\",\n  \"licenseUsageAdditionalInformation\": {\n    \"hostName\": \"\",\n    \"hostUser\": \"\",\n    \"localIpAddress\": \"\",\n    \"osInfo\": \"\",\n    \"softwareVersion\": \"\",\n    \"databaseName\": \"\",\n    \"browserInfo\": \"\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_licenciamento}}/licensing/license-server/licenses/:tenantId/legacy/consume",
+              "host": [
+                "{{base_url_licenciamento}}"
+              ],
+              "path": [
+                "licensing",
+                "license-server",
+                "licenses",
+                ":tenantId",
+                "legacy",
+                "consume"
+              ],
+              "variable": [
+                {
+                  "key": "tenantId",
+                  "value": "{{tenantId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url_licenciamento",
+      "value": "http://clientehomepage.viasoft.com.br:1503"
+    },
+    {
+      "key": "tenantId",
+      "value": ""
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Status code 2xx', function() {",
+          "    pm.response.to.be.success;",
+          "});",
+          "",
+          "pm.test('Tempo de resposta < 3s', function() {",
+          "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+          "});",
+          "",
+          "var ct = pm.response.headers.get('Content-Type');",
+          "if (ct && ct.includes('application/json')) {",
+          "    pm.test('JSON válido', function() { pm.response.to.be.json; });",
+          "}"
+        ]
+      }
+    }
+  ]
+}

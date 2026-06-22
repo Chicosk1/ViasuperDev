@@ -80,6 +80,7 @@ VIASUPERDEV/
 - `02_Processos/`, `03_Regras_Negocio/`, `05_Arquiteturas/`, `06_Glossarios/` usam **subpastas por módulo**
 - `04_Padroes_Tecnicos/` usa subpastas por **linguagem/stack** (frontend, backend)
 - `_scripts/` e `_templates/` são **excluídos da indexação** via configuração do indexer (não são conhecimento, são ferramentas)
+- `07_APIs/` é **excluído da indexação** — contém arquivos JSON (Postman), não documentos Markdown com frontmatter
 - `05_Arquiteturas/` absorve o papel de ADR (Decisões de Arquitetura)
 
 ---
@@ -214,6 +215,7 @@ Documentado em: `00_Templates_e_Scripts/_meta/_meta_contexto_llm.md`
 - **`sistema: viasuper`** (não `erp`)
 - **Tags em formato lista YAML** (não inline)
 - **`05_Arquiteturas/`** atua como ADR — sem pasta separada `07_ADRs/`
+- **`07_APIs/`** armazena coleções e environments Postman — subpasta `postman/` por ferramenta
 - **`99_AGs/`** com subpastas `backlog/doing/done`
 - **`arquiteturas_relacionadas`** (não `adrs_relacionados`)
 - **`versao_template: "1.0"`** obrigatório em todos os documentos

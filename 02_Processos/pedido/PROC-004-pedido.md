@@ -46,8 +46,8 @@ Gerenciar o ciclo de vida de pedidos de compra e venda no sistema Viasuper (seja
 As validações e regras disponíveis na rotina de Pedidos e Cotações incluem:
 
 - [[RN-009-origem-pedidos]] — **Origem dos Pedidos:** Os pedidos de compra podem ser gerados de forma automatizada por meio da rotina de análise de compra ou criados manualmente pelo usuário na rotina de lançamentos.
-- RN-028-comissionamento-pedido — **Vínculo de Comissionados:** A comissão do pedido está estritamente vinculada ao cadastro prévio da pessoa comissionada na aba "Cliente" dentro da rotina de Cadastro de Pessoas.
-- RN-029-situacao-pedido-cotacao — **Estados e Situações do Pedido:** O ciclo de vida do pedido ou cotação obedece às seguintes situações:
+- RN-0XX-comissionamento-pedido — **Vínculo de Comissionados:** A comissão do pedido está estritamente vinculada ao cadastro prévio da pessoa comissionada na aba "Cliente" dentro da rotina de Cadastro de Pessoas.
+- RN-0XX-situacao-pedido-cotacao — **Estados e Situações do Pedido:** O ciclo de vida do pedido ou cotação obedece às seguintes situações:
   - *Aguardando Aprovação:* Pedidos gerados via análise de compra que necessitam de liberação do gestor.
   - *Pendente:* Pedido aprovado, mas ainda sem recebimento ou faturamento.
   - *Parcialmente Entregue:* Recebimento ou faturamento parcial dos produtos do pedido.
@@ -55,9 +55,9 @@ As validações e regras disponíveis na rotina de Pedidos e Cotações incluem:
   - *Cotação de Compra:* Estado inicial de negociação com fornecedores.
   - *Cotação Finalizada:* Cotação encerrada que originou um ou mais pedidos de compra.
 - [[RN-018-envio-pdv-integracao]] — **Integração Retaguarda e Frente de Caixa (PDV):** Para que um pedido lançado na Retaguarda seja visualizado e entregue pelo PDV, a respectiva Configuração de Pedido (*Configurações > Documentos > Configurações de Pedido*) deve ter o parâmetro *"Envia para PDV"* configurado como *"SIM"*.
-- RN-030-cotacao-fornecedores-email — **Exportação e Envio de Planilhas de Cotação:** A rotina de cotações permite gerar e enviar planilhas no formato `.xls` por e-mail para múltiplos fornecedores vinculados, exigindo endereço de correio eletrônico cadastrado na ficha do fornecedor.
-- RN-031-sugestao-melhor-fornecedor — **Homologação pelo Menor Valor Global:** O sistema analisa os retornos das planilhas importadas e sugere na aba "Melhor Fornecedor" aquele que apresenta o menor custo total somado para todos os itens da cotação.
-- RN-032-sugestao-melhor-preco-item — **Homologação pelo Menor Preço por Item:** O sistema classifica individualmente por item o participante com o menor preço proposto, permitindo fracionar o faturamento e gerar múltiplos pedidos de compra direcionados.
+- RN-0XX-cotacao-fornecedores-email — **Exportação e Envio de Planilhas de Cotação:** A rotina de cotações permite gerar e enviar planilhas no formato `.xls` por e-mail para múltiplos fornecedores vinculados, exigindo endereço de correio eletrônico cadastrado na ficha do fornecedor.
+- RN-0XX-sugestao-melhor-fornecedor — **Homologação pelo Menor Valor Global:** O sistema analisa os retornos das planilhas importadas e sugere na aba "Melhor Fornecedor" aquele que apresenta o menor custo total somado para todos os itens da cotação.
+- RN-00X-sugestao-melhor-preco-item — **Homologação pelo Menor Preço por Item:** O sistema classifica individualmente por item o participante com o menor preço proposto, permitindo fracionar o faturamento e gerar múltiplos pedidos de compra direcionados.
 - [[RN-013-recalculo-tributario-documentos]] — **Recálculo de Impostos no Pedido:** Caso haja alterações nas configurações e alíquotas fiscais do ERP após o lançamento do pedido, o sistema permite recalcular e ajustar os impostos dos itens a qualquer momento antes da finalização e faturamento do pedido.
 - [[RN-004-rateio-proporcional-itens]] — **Rateio Proporcional nos Itens do Pedido:** Valores globais do pedido (como frete, seguro, desconto global e despesas acessórias) são distribuídos proporcionalmente entre os itens com base na participação de cada um no valor total do documento.
 

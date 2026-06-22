@@ -46,12 +46,12 @@ As validações e regras disponíveis na rotina de Análise de Compra incluem:
 - [[RN-010-compra-centralizada-x-descentralizada]] — **Modalidade de Compra Centralizada:** Se marcado, gera apenas um pedido consolidado para o estabelecimento logado, independentemente de se foram realizadas análises para outros estabelecimentos simultaneamente.
 - [[RN-007-sugestao-indice-vendas]] — **Utilizar Índice de Vendas:** A sugestão de compra é gerada baseando-se no comportamento sazonal de vendas do produto.
 - [[RN-008-sugestao-media-vendas]] — **Média de Vendas:** Caso marcado, permite visualizar a média de vendas como parâmetro na análise (mesmo para produtos inativos para compra se a opção estiver parametrizada).
-- RN-009-previsao-saldo-estoque — **Previsão de Saldo de Estoque:** Calcula a necessidade do produto baseando-se no saldo atual, consumo diário, previsões de entrada/saída futuras. A sugestão considerará a data final informada para essa previsão.
-- RN-010-indicadores-visuais-estoque — **Indicadores Visuais no Grid:** Os produtos são sinalizados por cores: Vermelho (estoque negativo), Azul (estoque positivo no estabelecimento logado) e Preto (produtos de outros estabelecimentos).
+- RN-0XX-previsao-saldo-estoque — **Previsão de Saldo de Estoque:** Calcula a necessidade do produto baseando-se no saldo atual, consumo diário, previsões de entrada/saída futuras. A sugestão considerará a data final informada para essa previsão.
+- RN-0XX-indicadores-visuais-estoque — **Indicadores Visuais no Grid:** Os produtos são sinalizados por cores: Vermelho (estoque negativo), Azul (estoque positivo no estabelecimento logado) e Preto (produtos de outros estabelecimentos).
 - [[RN-011-parametrizacao-transferencia]] — **Gerar Pedido de Transferência:** Ao selecionar a quantidade informada para transferência, o sistema obedece às regras e configurações padrão de transferência de saída e entrada.
-- RN-042-bloqueio-produtos-inativos — **Não Exibir Produtos Inativos para Compra:** Parâmetro que impede a inclusão e visualização de itens já descontinuados ou bloqueados no catálogo para compra.
-- RN-043-analise-com-embalagem — **Conversão por Embalagem:** Se marcado, apresenta as quantidades sugeridas convertidas pela unidade e fator da embalagem vinculada ao fornecedor/produto.
-- RN-044-filtro-somente-sugestao — **Somente Produtos com Sugestão:** Quando selecionado, oculta os produtos do mix que não atingiram a quantidade mínima que dispare gatilho de necessidade de compra.
+- RN-0XX-bloqueio-produtos-inativos — **Não Exibir Produtos Inativos para Compra:** Parâmetro que impede a inclusão e visualização de itens já descontinuados ou bloqueados no catálogo para compra.
+- RN-0XX-analise-com-embalagem — **Conversão por Embalagem:** Se marcado, apresenta as quantidades sugeridas convertidas pela unidade e fator da embalagem vinculada ao fornecedor/produto.
+- RN-0XX-filtro-somente-sugestao — **Somente Produtos com Sugestão:** Quando selecionado, oculta os produtos do mix que não atingiram a quantidade mínima que dispare gatilho de necessidade de compra.
 
 ## 4. Fluxo do Processo
 

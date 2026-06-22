@@ -37,7 +37,7 @@ Realizar a recepção lógica dos pedidos de compra pendentes gerados no ERP. A 
 
 As validações e regras disponíveis na rotina incluem:
 
-- RN-045-fornecedor-obrigatorio-recepcao — **Fornecedor Obrigatório:** A consulta no filtro principal exige o preenchimento obrigatório da pessoa/fornecedor emissor do pedido.
+- RN-0XX-fornecedor-obrigatorio-recepcao — **Fornecedor Obrigatório:** A consulta no filtro principal exige o preenchimento obrigatório da pessoa/fornecedor emissor do pedido.
 - [[RN-012-geracao-nota-recepcao]] — **Seleção Múltipla e Conversão em NF:** O sistema permite a marcação de múltiplos pedidos de compra listados no grid do mesmo fornecedor. Ao salvar, todos os itens selecionados são convertidos e agrupados em um único lançamento de rascunho de Nota Fiscal.
 
 ## 4. Fluxo do Processo

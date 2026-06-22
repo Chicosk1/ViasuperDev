@@ -44,11 +44,11 @@ Facilitar e agilizar o lançamento de notas fiscais de entrada de mercadorias no
 
 As validações e regras disponíveis na rotina de importação de XML incluem:
 
-- RN-020-carregar-notas-existentes — **Carregar Notas já Existentes:** Se ativado, exibe a nota no grid mas bloqueia sua importação secundária, gerando um status de erro de nota já existente no grid de arquivos carregados.
-- RN-021-baixa-pedido-automatica — **Entregar Pedido após Importação:** Se marcado, ao salvar a nota de entrada com sucesso, o sistema exibe uma mensagem solicitando a confirmação de baixa do pedido de compra vinculado.
-- RN-022-transferencia-entre-filiais — **Transferência de Notas entre Filiais:** Se marcado, permite receber e transferir notas fiscais emitidas pela matriz diretamente para a filial selecionada.
+- RN-0XX-carregar-notas-existentes — **Carregar Notas já Existentes:** Se ativado, exibe a nota no grid mas bloqueia sua importação secundária, gerando um status de erro de nota já existente no grid de arquivos carregados.
+- RN-0XX-baixa-pedido-automatica — **Entregar Pedido após Importação:** Se marcado, ao salvar a nota de entrada com sucesso, o sistema exibe uma mensagem solicitando a confirmação de baixa do pedido de compra vinculado.
+- RN-0XX-transferencia-entre-filiais — **Transferência de Notas entre Filiais:** Se marcado, permite receber e transferir notas fiscais emitidas pela matriz diretamente para a filial selecionada.
 - [[RN-013-recalculo-tributario-documentos]] — **Recálculo Tributário na Importação (ICMS/PIS/COFINS/ICMS-ST):** Quando ativos, os checkboxes de recálculo (Recalcula ICMS, Recalcula PIS, Recalcula COFINS, Recalcula Prod sem valor ICMS-ST) substituem os impostos originais importados com o XML pelas configurações fiscais cadastradas localmente no ERP.
-- RN-023-validacao-casas-decimais — **Validações de Casas Decimais (Processamento):** Corrige divergências nos somatórios dos itens causadas por dízimas ou excesso de casas decimais do XML por meio de três opções:
+- RN-0XX-validacao-casas-decimais — **Validações de Casas Decimais (Processamento):** Corrige divergências nos somatórios dos itens causadas por dízimas ou excesso de casas decimais do XML por meio de três opções:
   - *Considerar “Valor total” = “Valor Un Trib” x “Quantidade” do XML* (corrige divergência unitária/quantidade do item).
   - *Considerar “Total a Acertar” = “Valor Total da NF-e” do XML* (corrige divergência entre total calculado e total da NF-e).
   - *Considerar “Total dos Produtos” = ”Valor Total” do grid* (corrige divergência de somatório geral do grid).

@@ -43,11 +43,11 @@ Monitorar, capturar e importar cupons fiscais provenientes dos Pontos de Venda (
 As validações e regras disponíveis na rotina do syncJet incluem:
 
 - [[RN-019-descentralizacao-importacao-syncjet]] — **Descentralização da Importação:** A captura e integração de dados de vendas fiscais (PDV) e vendas digitais (e-commerce) ocorrem de forma isolada em segundo plano, evitando concorrência de recursos de hardware na retaguarda do ERP.
-- RN-037-importacao-manual-controle — **Controle de Modo de Importação:** A execução da importação manual pelo painel visual do syncJet é condicionada à parametrização da tag `ImportacaoManual=1` no arquivo `.conf`. O padrão omitido ou igual a `0` mantém o aplicativo operando estritamente de forma automática e invisível.
-- RN-038-redirecionamento-conexao — **Redirecionamento Dinâmico de Banco de Dados:** A tag `Conexao` especifica para qual base de dados os registros serão inseridos, devendo coincidir exatamente com os aliases homologados (Ex: `MEGA` ou `CARPEC`).
-- RN-039-sincronizacao-pdv-origem — **Mapeamento de Captura de PDV Físico:** O syncJet lê os arquivos de cupons fiscais diretamente a partir da pasta de rede cadastrada na rotina *Configurações » Sincronização com PDV* do ERP.
-- RN-040-integracoes-ecommerce-escopo — **Escopo de Integração de E-commerce:** A parametrização de credenciais de APIs/Tokens e comportamento de vendas online é configurada na retaguarda ViaSuper, podendo ser aplicada em nível global (toda a rede) ou individual por filial (Regras por Estabelecimento).
-- RN-041-reprocessamento-arquivos — **Reprocessamento Manual:** Em cenários de contingência ou erros, permite processar manualmente arquivos JSON/txt depositados no diretório do e-commerce através do menu de atalho da plataforma selecionada.
+- RN-0XX-importacao-manual-controle — **Controle de Modo de Importação:** A execução da importação manual pelo painel visual do syncJet é condicionada à parametrização da tag `ImportacaoManual=1` no arquivo `.conf`. O padrão omitido ou igual a `0` mantém o aplicativo operando estritamente de forma automática e invisível.
+- RN-0XX-redirecionamento-conexao — **Redirecionamento Dinâmico de Banco de Dados:** A tag `Conexao` especifica para qual base de dados os registros serão inseridos, devendo coincidir exatamente com os aliases homologados (Ex: `MEGA` ou `CARPEC`).
+- RN-0XX-sincronizacao-pdv-origem — **Mapeamento de Captura de PDV Físico:** O syncJet lê os arquivos de cupons fiscais diretamente a partir da pasta de rede cadastrada na rotina *Configurações » Sincronização com PDV* do ERP.
+- RN-0XX-integracoes-ecommerce-escopo — **Escopo de Integração de E-commerce:** A parametrização de credenciais de APIs/Tokens e comportamento de vendas online é configurada na retaguarda ViaSuper, podendo ser aplicada em nível global (toda a rede) ou individual por filial (Regras por Estabelecimento).
+- RN-0XX-reprocessamento-arquivos — **Reprocessamento Manual:** Em cenários de contingência ou erros, permite processar manualmente arquivos JSON/txt depositados no diretório do e-commerce através do menu de atalho da plataforma selecionada.
 
 ## 4. Fluxo do Processo
 

@@ -25,6 +25,8 @@ viasuper-docs/
 ├── 04_Padroes_Tecnicos/   # Padrões de código Delphi/Oracle  (PT-*)
 ├── 05_Arquiteturas/       # Decisões arquiteturais           (ARQ-*)
 ├── 06_Glossarios/         # Vocabulário técnico e fiscal     (GLOS-*)
+├── 07_APIs/               # Coleções e ambientes Postman por API externa
+│   └── postman/           # Collections (.json) e environments Postman
 └── 99_AGs/                # Atividades de Gestão do Jira
     ├── backlog/
     ├── doing/

@@ -63,6 +63,10 @@ VIASUPERDEV/
 │       └── ARQ-001-unit-gera-nota-cred-deb-tela-filtros.md
 ├── 06_Glossarios/
 │   └── GLOS-nota.md           ← 26 termos de reforma tributária e fiscal
+├── 07_APIs/                   ← coleções e environments Postman (não indexado)
+│   └── postman/
+│       ├── *.postman_collection.json   ← collections por API externa (9Bits, iFood, SGP, Scanntech, FORLOG, Licenciamento Viasoft, Site Mercado, Viasuper Padrão/Titan Apache+TMS, API Reforma)
+│       └── *.postman_environment.json  ← Desenvolvimento Local, Homologação, Produção
 └── 99_AGs/
     ├── backlog/
     │   ├── AG-31945-gerar-notas-credito-debito-parte-1.md

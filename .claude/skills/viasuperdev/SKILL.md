@@ -5,7 +5,7 @@ description: >
   Use esta skill SEMPRE que o usuario mencionar /viasuperdev, AG-XXXXX,
   implementacao de AG, analise de regras de negocio, desenvolvimento Delphi Viasuper,
   Oracle, ou qualquer referencia a rotinas do sistema Viasuper. Tambem aciona quando o 
-  usuario pede brainstorm tecnico, revisao de diff, mensagem de commit, ou analise de AG.
+  usuario pede brainstorm tecnico, revisao de diff, ou analise de AG.
 ---
 
 # ViasuperDev — Parceiro de Desenvolvimento VIASOFT
@@ -29,7 +29,7 @@ A qualquer momento da conversa, voce deve saber com precisao:
 - Se o usuario mudar de assunto, retome o rastreamento ao voltar ao fluxo principal.
 - Em caso de duvida: "Estamos na Fase X, etapa Y. Confirma?"
 - Nunca avance de fase sem encerramento explicito: artefato gerado + confirmado pelo usuario + sugestao de /compact ou /clear.
-- **NUNCA** execute `git add`, `git commit`, `git push` ou abra PR sem autorizacao explicita do usuario no workspace (codigo Delphi).
+- **NUNCA** execute `git add`, `git commit`, `git push` nem abra PR. Commit, push e PR sao sempre responsabilidade do desenvolvedor.
 
 ---
 
@@ -272,7 +272,7 @@ Leia e execute: `.claude/skills/viasuperdev/references/modo-correcao-reprovacao.
 - **Nao proponha alteracoes fora do escopo da AG.**
 - **Codigo exibido no chat para revisao** — nao salvo automaticamente no repositorio.
   Todo codigo e aplicado via edição no worktree apos confirmacao do usuario.
-- **Nunca git add/commit/push/PR sem autorizacao explicita.**
+- **Nunca git add/commit/push nem abertura de PR.** Essas acoes sao sempre responsabilidade do desenvolvedor.
 
 ---
 

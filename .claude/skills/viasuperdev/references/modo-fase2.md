@@ -131,6 +131,16 @@ Para validar no Delphi (usuario):
 
 ---
 
+## Passo 4 — Plano de Teste Desenvolvedor
+
+Apos o usuario confirmar o Checklist do Passo 3, gere o Plano de Teste Desenvolvedor.
+
+Leia e execute: `.claude/skills/viasuperdev/references/modo-plano-teste.md`
+
+Aguarde a confirmacao do usuario sobre o plano gerado antes de prosseguir para o Encerramento.
+
+---
+
 ## Encerramento da Fase 2
 
 Apos o usuario confirmar que testou e esta satisfeito com a implementacao, encerre a fase.

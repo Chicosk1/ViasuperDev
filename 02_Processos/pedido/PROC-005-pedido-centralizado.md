@@ -17,6 +17,10 @@ tags:
   - viasuper
 rns_relacionadas:
   - RN-004
+  - RN-010
+  - RN-007
+  - RN-008
+  - RN-011
 arquiteturas_relacionadas: []
 padroes_relacionados: []
 jiras_origem: []
@@ -41,14 +45,14 @@ Realizar o planejamento e a emissão centralizada de compras de produtos para to
 
 As validações e regras disponíveis na rotina de Pedido Centralizado incluem:
 
-- RN-00x-compra-centralizada-x-descentralizada — **Modalidade de Compra Centralizada:** Define se os pedidos resultantes serão faturados e entregues diretamente no estabelecimento central (Compra Centralizada) ou se serão ramificados e faturados diretamente contra cada filial de destino (Compra Descentralizada).
-- RN-00x-pedidos-de-transferencia-fluxo — **Geração de Pedidos de Transferência:** Ao marcar *"Realizar Pedidos de Transferência"* no fluxo centralizado, o sistema cria automaticamente o pedido de compra contra o CD central, além de pedidos de transferência de saída (do CD) e de entrada (para as lojas filiais).
-- RN-00x-parametrizacao-transferencia — **Configurações Padrão de Transferência:** A parametrização tributária e operacional das transferências geradas pelo Pedido Centralizado obedece estritamente às configurações indicadas na rotina *Configuração de Documento Padrão para Geração de Pedidos*.
-- RN-00x-mix-produtos-comprador — **Bloqueio de Itens por Comprador:** A sugestão de compra é filtrada por comprador. Se o produto não estiver vinculado ao comprador ativo no Mix de Produtos, ele é ocultado da tela de sugestão automática.
-- RN-00x-mix-produtos-estabelecimento — **Restrição de Produtos por Filial:** A inclusão manual ou automática de produtos exige que o item esteja habilitado para os estabelecimentos de destino na parametrização do Mix de Produtos por Estabelecimento.
-- RN-00x-sugestao-compra-giro-sazonal — **Cálculo da Sugestão por Índice de Vendas:** O sistema calcula a sugestão utilizando o histórico temporal de vendas do mês selecionado nos últimos 5 anos e percentuais de volatilidade recentes (Job `AtGiroSazonal` executado no Gerenciador de Tarefas).
-- RN-00x-sugestao-compra-media-vendas — **Cálculo da Sugestão por Média de Vendas:** O sistema calcula as sugestões com base na Média Original, Desvio Padrão e Média do cadastro do produto (Job `CalcEstMedVenda` executado no Gerenciador de Tarefas).
-- RN-00x-carregamento-impostos-produtos — **Carregamento Fiscal:** A marcação do checkbox sem título ao lado de *"Realizar Compra Centralizada"* determina se o sistema deve recuperar e exibir as alíquotas de impostos de entrada (ICMS, PIS, COFINS, IPI, Funrural) dos produtos incluídos no grid.
+- [[RN-010-compra-centralizada-x-descentralizada]] — **Modalidade de Compra Centralizada:** Define se os pedidos resultantes serão faturados e entregues diretamente no estabelecimento central (Compra Centralizada) ou se serão ramificados e faturados diretamente contra cada filial de destino (Compra Descentralizada).
+- RN-033-pedidos-de-transferencia-fluxo — **Geração de Pedidos de Transferência:** Ao marcar *"Realizar Pedidos de Transferência"* no fluxo centralizado, o sistema cria automaticamente o pedido de compra contra o CD central, além de pedidos de transferência de saída (do CD) e de entrada (para as lojas filiais).
+- [[RN-011-parametrizacao-transferencia]] — **Configurações Padrão de Transferência:** A parametrização tributária e operacional das transferências geradas pelo Pedido Centralizado obedece estritamente às configurações indicadas na rotina *Configuração de Documento Padrão para Geração de Pedidos*.
+- RN-034-mix-produtos-comprador — **Bloqueio de Itens por Comprador:** A sugestão de compra é filtrada por comprador. Se o produto não estiver vinculado ao comprador ativo no Mix de Produtos, ele é ocultado da tela de sugestão automática.
+- RN-035-mix-produtos-estabelecimento — **Restrição de Produtos por Filial:** A inclusão manual ou automática de produtos exige que o item esteja habilitado para os estabelecimentos de destino na parametrização do Mix de Produtos por Estabelecimento.
+- [[RN-007-sugestao-indice-vendas]] — **Cálculo da Sugestão por Índice de Vendas:** O sistema calcula a sugestão utilizando o histórico temporal de vendas do mês selecionado nos últimos 5 anos e percentuais de volatilidade recentes (Job `AtGiroSazonal` executado no Gerenciador de Tarefas).
+- [[RN-008-sugestao-media-vendas]] — **Cálculo da Sugestão por Média de Vendas:** O sistema calcula as sugestões com base na Média Original, Desvio Padrão e Média do cadastro do produto (Job `CalcEstMedVenda` executado no Gerenciador de Tarefas).
+- RN-036-carregamento-impostos-produtos — **Carregamento Fiscal:** A marcação do checkbox sem título ao lado de *"Realizar Compra Centralizada"* determina se o sistema deve recuperar e exibir as alíquotas de impostos de entrada (ICMS, PIS, COFINS, IPI, Funrural) dos produtos incluídos no grid.
 - [[RN-004-rateio-proporcional-itens]] — **Rateio Proporcional nos Itens do Pedido Centralizado:** Valores globais do pedido (como frete, seguro, desconto global e despesas acessórias) são distribuídos proporcionalmente entre os itens com base na participação de cada um no valor total do documento.
 
 ## 4. Fluxo do Processo

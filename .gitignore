@@ -61,3 +61,14 @@ Thumbs.db
 .claude/memory/
 .claude/worktrees/
 .claude/tasks/
+
+# Arquivos sensíveis
+.claude/skills/viasuperdev/contexto-projeto.md
+00_Templates_e_Scripts/_scripts/.env
+02_Processos/
+03_Regras_Negocio/
+04_Padroes_Tecnicos/
+05_Arquiteturas/
+06_Glossarios/
+07_APIs/
+99_AGs/

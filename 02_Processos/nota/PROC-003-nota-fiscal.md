@@ -17,6 +17,8 @@ tags:
   - viasuper
 rns_relacionadas:
   - RN-004
+  - RN-013
+  - RN-014
 arquiteturas_relacionadas: []
 padroes_relacionados: []
 jiras_origem: []
@@ -43,13 +45,13 @@ Permitir o gerenciamento completo de notas fiscais de entrada e saída, incluind
 
 As validações e regras disponíveis na rotina incluem:
 
-- RN-00x-formas-pagamento — **Formas de Pagamento Permitidas:** O pagamento da nota pode ser registrado através de 6 formas: Dinheiro (à vista), Cheque (em cheque), Cartão (crédito/débito), Duplicata/Boleto (a prazo), Conta Pessoal (saldo liberado ao portador) e Outros (convênios da empresa).
+- [[RN-014-financeiro-pagamento]] — **Formas de Pagamento Permitidas:** O pagamento da nota pode ser registrado através de 6 formas: Dinheiro (à vista), Cheque (em cheque), Cartão (crédito/débito), Duplicata/Boleto (a prazo), Conta Pessoal (saldo liberado ao portador) e Outros (convênios da empresa).
 - [[RN-004-rateio-proporcional-itens]] — **Rateio de Despesas Acessórias:** Distribui de forma proporcional os valores de frete e despesas adicionais entre os produtos do grid com base em Valor, Peso Bruto ou Quantidade
-- RN-00x-bonificacao-produtos — **Tratamento de Bonificações:** Se a flag Bonificação estiver marcada, o valor do item correspondente é deduzido do total final da nota fiscal, e sua tributação seguirá o cadastro específico de bonificações definido na Configuração de Documento.
-- RN-00x-numeracao-e-serie — **Sequenciamento de Série e Numeração:** A série é associada de forma automática à configuração do documento. O número oficial do documento permanece em `0` (rascunho) e só é preenchido definitivamente após a autorização da nota junto à Sefaz.
-- RN-00x-emissao-a-partir-de — **Notas Referenciadas (A partir de):** Para emitir uma nota referenciando outros documentos (como devoluções ou vendas de cupom fiscal), o documento de origem correspondente já deve estar previamente lançado e ativo no Viasuper.
-- RN-00x-nfse-parametrizacao — **Requisitos para Emissão de Nota de Serviço (NFS-e):** O documento de serviço exige espécie `NFSE`, operação de entrada e os parâmetros `Movimenta Financeiro = Sim` e `Tipo Emissão = Terceiros` ativados.
-- RN-00x-recalculo-tributacao — **Recálculo de Tributação:** O sistema permite recalcular e atualizar os impostos da nota fiscal para fins de ajuste até o momento da sua transmissão oficial para a Sefaz.
+- RN-0XX-bonificacao-produtos — **Tratamento de Bonificações:** Se a flag Bonificação estiver marcada, o valor do item correspondente é deduzido do total final da nota fiscal, e sua tributação seguirá o cadastro específico de bonificações definido na Configuração de Documento.
+- RN-0XX-numeracao-e-serie — **Sequenciamento de Série e Numeração:** A série é associada de forma automática à configuração do documento. O número oficial do documento permanece em `0` (rascunho) e só é preenchido definitivamente após a autorização da nota junto à Sefaz.
+- RN-0XX-emissao-a-partir-de — **Notas Referenciadas (A partir de):** Para emitir uma nota referenciando outros documentos (como devoluções ou vendas de cupom fiscal), o documento de origem correspondente já deve estar previamente lançado e ativo no Viasuper.
+- RN-0XX-nfse-parametrizacao — **Requisitos para Emissão de Nota de Serviço (NFS-e):** O documento de serviço exige espécie `NFSE`, operação de entrada e os parâmetros `Movimenta Financeiro = Sim` e `Tipo Emissão = Terceiros` ativados.
+- [[RN-013-recalculo-tributario-documentos]] — **Recálculo de Tributação:** O sistema permite recalcular e atualizar os impostos da nota fiscal para fins de ajuste até o momento da sua transmissão oficial para a Sefaz.
 
 ## 4. Fluxo do Processo
 

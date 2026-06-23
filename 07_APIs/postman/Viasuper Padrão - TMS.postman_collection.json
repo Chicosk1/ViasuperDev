@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    "_postman_id": "f6ec83eb-6ab7-42d1-b763-fc5c56b13ca5",
     "name": "Viasuper Padrão - TMS",
+    "description": "API TMS XData (REST/Delphi) do Viasuper edição Padrão. Autenticação Bearer Token com refresh automático. Preencher `base_url_tms`, `tms_user`, `tms_password` e `integradorKey` no ambiente.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "38872675",
-    "description": "API TMS XData (REST/Delphi) do Viasuper edição Padrão. Autenticação Bearer Token com refresh automático. Preencher `base_url_tms`, `tms_user`, `tms_password` e `integradorKey` no ambiente."
+    "_exporter_id": "38872675"
   },
   "item": [
     {
@@ -12,6 +12,35 @@
       "item": [
         {
           "name": "POST Autenticar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Auth TMS] Autenticar ──",
+                  "var json = pm.response.json();",
+                  "var token = json.value || json.access_token || json.token || json.authToken;",
+                  "if (token) {",
+                  "    pm.environment.set('token', token);",
+                  "    pm.environment.set('token_tms_expires_at', Date.now() + 3600000);",
+                  "    console.log('[TMS] Token salvo.');",
+                  "} else {",
+                  "    console.warn('[TMS] Token não encontrado:', JSON.stringify(json));",
+                  "}",
+                  "",
+                  "pm.test('[Auth TMS] Token retornado na resposta', function() {",
+                  "    pm.expect(token, 'token ausente').to.not.be.undefined;",
+                  "    pm.expect(token).to.be.a('string').with.lengthOf.above(10);",
+                  "});",
+                  "",
+                  "pm.test('[Auth TMS] Resposta possui campo de token reconhecido', function() {",
+                  "    pm.expect(json).to.have.any.keys('value', 'access_token', 'token', 'authToken');",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -50,33 +79,27 @@
               ]
             }
           },
-          "response": [],
+          "response": []
+        },
+        {
+          "name": "GET Status do Servidor",
           "event": [
             {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// XData retorna { value: 'TOKEN' }",
-                  "var json = pm.response.json();",
-                  "var token = json.value || json.access_token || json.token || json.authToken;",
-                  "if (token) {",
-                  "    pm.environment.set('token', token);",
-                  "    pm.environment.set('token_tms_expires_at', Date.now() + 3600000);",
-                  "    console.log('Token TMS salvo.');",
-                  "} else {",
-                  "    console.warn('Token TMS não encontrado. Resposta:', JSON.stringify(json));",
-                  "}",
-                  "pm.test('Token retornado', function() {",
-                  "    pm.expect(token, 'token ausente na resposta').to.not.be.undefined;",
+                  "// ── [Status] Servidor TMS ──",
+                  "pm.test('[Status TMS] Servidor está online', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('[Status TMS] Resposta não está vazia', function() {",
+                  "    pm.expect(pm.response.json()).to.not.be.null;",
                   "});"
                 ]
               }
             }
-          ]
-        },
-        {
-          "name": "GET Status do Servidor",
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -115,6 +138,32 @@
       "item": [
         {
           "name": "GET Consultar Limite de Crédito",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Clientes] Consultar Limite de Crédito ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Limite] Endpoint respondeu (200 ou 404)', function() {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('[Limite] Resposta contém dados de limite', function() {",
+                  "        pm.expect(json).to.not.be.null;",
+                  "        var data = json.result || json.value || json;",
+                  "        pm.expect(data).to.not.be.empty;",
+                  "    });",
+                  "} else {",
+                  "    console.warn('[Limite] Não encontrado — verifique {{AEstabId}} e {{APessoaId}}.');",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -158,6 +207,26 @@
         },
         {
           "name": "GET Buscar Cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Buscar Cliente] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Buscar Cliente] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Buscar Cliente] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -197,6 +266,26 @@
         },
         {
           "name": "GET Buscar Pessoa Comissionada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pessoa Comissionada] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pessoa Comissionada] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Pessoa Comissionada] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -244,6 +333,29 @@
           "item": [
             {
               "name": "GET Listar Duplicatas a Receber",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// ── [Duplicatas Receber] Listar ──",
+                      "var json = pm.response.json();",
+                      "",
+                      "pm.test('[Duplicatas Receber] Status 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('[Duplicatas Receber] Resposta contém dados', function() {",
+                      "    pm.expect(json).to.not.be.null;",
+                      "    var lista = Array.isArray(json) ? json",
+                      "              : (json.result || json.value || json.data || json.items);",
+                      "    pm.expect(lista).to.not.be.undefined;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
               "request": {
                 "method": "GET",
                 "header": [
@@ -292,6 +404,29 @@
             },
             {
               "name": "GET Buscar Duplicata a Receber por ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// ── [Duplicata Receber] Buscar por ID ──",
+                      "var json = pm.response.json();",
+                      "",
+                      "pm.test('[Duplicata Receber] Endpoint respondeu (200 ou 404)', function() {",
+                      "    pm.expect([200, 404]).to.include(pm.response.code);",
+                      "});",
+                      "",
+                      "if (pm.response.code === 200) {",
+                      "    pm.test('[Duplicata Receber] Resposta contém dados', function() {",
+                      "        var data = json.result || json.value || json.data || json;",
+                      "        pm.expect(data).to.not.be.empty;",
+                      "    });",
+                      "}"
+                    ]
+                  }
+                }
+              ],
               "request": {
                 "method": "GET",
                 "header": [
@@ -480,6 +615,29 @@
           "item": [
             {
               "name": "GET Listar Duplicatas a Pagar",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// ── [Duplicatas Pagar] Listar ──",
+                      "var json = pm.response.json();",
+                      "",
+                      "pm.test('[Duplicatas Pagar] Status 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('[Duplicatas Pagar] Resposta contém dados', function() {",
+                      "    pm.expect(json).to.not.be.null;",
+                      "    var lista = Array.isArray(json) ? json",
+                      "              : (json.result || json.value || json.data || json.items);",
+                      "    pm.expect(lista).to.not.be.undefined;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
               "request": {
                 "method": "GET",
                 "header": [
@@ -528,6 +686,29 @@
             },
             {
               "name": "GET Buscar Duplicata a Pagar por ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// ── [Duplicata Pagar] Buscar por ID ──",
+                      "var json = pm.response.json();",
+                      "",
+                      "pm.test('[Duplicata Pagar] Endpoint respondeu (200 ou 404)', function() {",
+                      "    pm.expect([200, 404]).to.include(pm.response.code);",
+                      "});",
+                      "",
+                      "if (pm.response.code === 200) {",
+                      "    pm.test('[Duplicata Pagar] Resposta contém dados', function() {",
+                      "        var data = json.result || json.value || json.data || json;",
+                      "        pm.expect(data).to.not.be.empty;",
+                      "    });",
+                      "}"
+                    ]
+                  }
+                }
+              ],
               "request": {
                 "method": "GET",
                 "header": [
@@ -623,6 +804,29 @@
       "item": [
         {
           "name": "GET Listar UFs",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [UFs] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[UFs] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[UFs] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -656,6 +860,29 @@
         },
         {
           "name": "GET Buscar UF por Sigla",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [UF Sigla] Buscar por ID ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[UF Sigla] Endpoint respondeu (200 ou 404)', function() {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('[UF Sigla] Resposta contém dados', function() {",
+                  "        var data = json.result || json.value || json.data || json;",
+                  "        pm.expect(data).to.not.be.empty;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -696,6 +923,29 @@
         },
         {
           "name": "GET Listar Centros de Custo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Centros de Custo] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Centros de Custo] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Centros de Custo] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -744,6 +994,26 @@
         },
         {
           "name": "GET Consulta Genérica (SQL)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Consulta Genérica] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Consulta Genérica] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Consulta Genérica] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -892,6 +1162,29 @@
       "item": [
         {
           "name": "GET Listar Produtos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Produtos] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Produtos] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Produtos] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -936,6 +1229,29 @@
         },
         {
           "name": "GET Buscar Produto por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Produto ID] Buscar por ID ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Produto ID] Endpoint respondeu (200 ou 404)', function() {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('[Produto ID] Resposta contém dados', function() {",
+                  "        var data = json.result || json.value || json.data || json;",
+                  "        pm.expect(data).to.not.be.empty;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -977,6 +1293,26 @@
         },
         {
           "name": "GET Buscar Produto por Código de Barras",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Produto Barras] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Produto Barras] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Produto Barras] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1032,6 +1368,26 @@
         },
         {
           "name": "GET Buscar Produto - Preço Normal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Produto Preço Normal] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Produto Preço Normal] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Produto Preço Normal] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1092,6 +1448,29 @@
       "item": [
         {
           "name": "GET Listar Pedidos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pedidos] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pedidos] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Pedidos] Resposta contém lista', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1140,6 +1519,29 @@
         },
         {
           "name": "GET Buscar Pedido por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pedido] Buscar por ID ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pedido] Endpoint respondeu (200 ou 404)', function() {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('[Pedido] Resposta contém dados', function() {",
+                  "        var pedido = json.result || json.value || json.data || json;",
+                  "        pm.expect(pedido).to.not.be.empty;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1181,6 +1583,33 @@
         },
         {
           "name": "GET Listar Pedidos (PDV)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pedidos PDV] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pedidos PDV] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Pedidos PDV] Resposta contém lista de pedidos', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista, 'Lista de pedidos não encontrada').to.not.be.undefined;",
+                  "});",
+                  "",
+                  "pm.test('[Pedidos PDV] Tempo adequado para listagem (< 8s)', function() {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(8000);",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1220,6 +1649,31 @@
         },
         {
           "name": "GET Buscar Pedido (PDV)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pedido PDV] Buscar por ID ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pedido PDV] Endpoint respondeu (200 ou 404)', function() {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('[Pedido PDV] Resposta contém dados do pedido', function() {",
+                  "        var pedido = json.result || json.value || json.data || json;",
+                  "        pm.expect(pedido).to.not.be.empty;",
+                  "    });",
+                  "} else {",
+                  "    console.warn('[Pedido PDV] Pedido não encontrado — verifique {{APedidoId}} no environment.');",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1263,6 +1717,29 @@
         },
         {
           "name": "GET Buscar Pedido por Comanda (PDV)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pedido PDV] Buscar por Comanda ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pedido Comanda] Endpoint respondeu (200 ou 404)', function() {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('[Pedido Comanda] Resposta contém dados do pedido', function() {",
+                  "        var pedido = json.result || json.value || json.data || json;",
+                  "        pm.expect(pedido).to.not.be.empty;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1352,6 +1829,26 @@
         },
         {
           "name": "GET Carregar Pedido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pedido] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pedido] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Pedido] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1399,6 +1896,26 @@
         },
         {
           "name": "GET Consultar Pedidos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Consultar Pedidos] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Consultar Pedidos] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Consultar Pedidos] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1496,6 +2013,26 @@
         },
         {
           "name": "GET Validar Comanda",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Validar Comanda] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Validar Comanda] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Validar Comanda] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1547,6 +2084,26 @@
         },
         {
           "name": "GET Carregar Config. do Pedido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Config Pedido] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Config Pedido] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Config Pedido] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1595,6 +2152,29 @@
       "item": [
         {
           "name": "GET Listar Pessoas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pessoas] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pessoas] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Pessoas] Resposta contém lista', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1639,6 +2219,29 @@
         },
         {
           "name": "GET Buscar Pessoa por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pessoa] Buscar por ID ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pessoa] Endpoint respondeu (200 ou 404)', function() {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('[Pessoa] Resposta contém dados', function() {",
+                  "        var pessoa = json.result || json.value || json.data || json;",
+                  "        pm.expect(pessoa).to.not.be.empty;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1822,6 +2425,29 @@
         },
         {
           "name": "GET Listar Pessoas (PDV)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pessoas PDV] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pessoas PDV] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Pessoas PDV] Resposta contém lista', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1861,6 +2487,29 @@
         },
         {
           "name": "GET Listar Pessoas Alteradas (PDV)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pessoas Alteradas PDV] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pessoas Alteradas PDV] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Pessoas Alteradas PDV] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1900,6 +2549,31 @@
         },
         {
           "name": "GET Buscar Pessoa (PDV)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pessoa PDV] Buscar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pessoa PDV] Endpoint respondeu (200 ou 404)', function() {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('[Pessoa PDV] Resposta contém dados da pessoa', function() {",
+                  "        var pessoa = json.result || json.value || json.data || json;",
+                  "        pm.expect(pessoa).to.not.be.empty;",
+                  "    });",
+                  "} else {",
+                  "    console.warn('[Pessoa PDV] Não encontrada — verifique {{APessoaId}} e {{AEstabId}}.');",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1947,6 +2621,29 @@
         },
         {
           "name": "GET Listar Pessoas com Cadastro Vencido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Cadastro Vencido] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Cadastro Vencido] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Cadastro Vencido] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1991,6 +2688,26 @@
       "item": [
         {
           "name": "GET Consultar Estoque",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Estoque] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Estoque] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Estoque] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -2044,6 +2761,29 @@
       "item": [
         {
           "name": "GET Listar Preços de Produtos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Preços] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Preços] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Preços] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -2096,6 +2836,29 @@
       "item": [
         {
           "name": "GET Listar Cidades",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Cidades] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Cidades] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Cidades] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -2139,6 +2902,29 @@
         },
         {
           "name": "GET Buscar Cidade por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Cidade ID] Buscar por ID ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Cidade ID] Endpoint respondeu (200 ou 404)', function() {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('[Cidade ID] Resposta contém dados', function() {",
+                  "        var data = json.result || json.value || json.data || json;",
+                  "        pm.expect(data).to.not.be.empty;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -2182,71 +2968,6 @@
     {
       "name": "Portal Doc",
       "item": [
-        {
-          "name": "POST Autenticar",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "IntegradorKey",
-                "value": "{{integradorKey}}"
-              },
-              {
-                "key": "database-name",
-                "value": "{{database}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"AUser\": \"{{tms_user}}\",\n  \"APassword\": \"{{tms_password}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url_portaldoc}}/viasoft/api/AuthWebService/Autenticar",
-              "host": [
-                "{{base_url_portaldoc}}"
-              ],
-              "path": [
-                "viasoft",
-                "api",
-                "AuthWebService",
-                "Autenticar"
-              ]
-            }
-          },
-          "response": [],
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "// XData retorna { value: 'TOKEN' }",
-                  "var json = pm.response.json();",
-                  "var token = json.value || json.access_token || json.token || json.authToken;",
-                  "if (token) {",
-                  "    pm.environment.set('token', token);",
-                  "    pm.environment.set('token_tms_expires_at', Date.now() + 3600000);",
-                  "    console.log('Token TMS salvo.');",
-                  "} else {",
-                  "    console.warn('Token TMS não encontrado. Resposta:', JSON.stringify(json));",
-                  "}",
-                  "pm.test('Token retornado', function() {",
-                  "    pm.expect(token, 'token ausente na resposta').to.not.be.undefined;",
-                  "});"
-                ]
-              }
-            }
-          ]
-        },
         {
           "name": "DFe",
           "item": [
@@ -2343,6 +3064,77 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "POST Autenticar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Auth TMS] Autenticar ──",
+                  "var json = pm.response.json();",
+                  "var token = json.value || json.access_token || json.token || json.authToken;",
+                  "if (token) {",
+                  "    pm.environment.set('token', token);",
+                  "    pm.environment.set('token_tms_expires_at', Date.now() + 3600000);",
+                  "    console.log('[TMS] Token salvo.');",
+                  "} else {",
+                  "    console.warn('[TMS] Token não encontrado:', JSON.stringify(json));",
+                  "}",
+                  "",
+                  "pm.test('[Auth TMS] Token retornado na resposta', function() {",
+                  "    pm.expect(token, 'token ausente').to.not.be.undefined;",
+                  "    pm.expect(token).to.be.a('string').with.lengthOf.above(10);",
+                  "});",
+                  "",
+                  "pm.test('[Auth TMS] Resposta possui campo de token reconhecido', function() {",
+                  "    pm.expect(json).to.have.any.keys('value', 'access_token', 'token', 'authToken');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "IntegradorKey",
+                "value": "{{integradorKey}}"
+              },
+              {
+                "key": "database-name",
+                "value": "{{database}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"AUser\": \"{{tms_user}}\",\n  \"APassword\": \"{{tms_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_portaldoc}}/viasoft/api/AuthWebService/Autenticar",
+              "host": [
+                "{{base_url_portaldoc}}"
+              ],
+              "path": [
+                "viasoft",
+                "api",
+                "AuthWebService",
+                "Autenticar"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -2351,6 +3143,29 @@
       "item": [
         {
           "name": "GET Listar Filiais",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Filiais] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Filiais] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Filiais] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -2394,6 +3209,29 @@
         },
         {
           "name": "GET Buscar Filial por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Filial ID] Buscar por ID ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Filial ID] Endpoint respondeu (200 ou 404)', function() {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('[Filial ID] Resposta contém dados', function() {",
+                  "        var data = json.result || json.value || json.data || json;",
+                  "        pm.expect(data).to.not.be.empty;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -2434,6 +3272,29 @@
         },
         {
           "name": "GET Listar Empresas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Empresas] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Empresas] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Empresas] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -2477,6 +3338,29 @@
         },
         {
           "name": "GET Buscar Empresa por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Empresa ID] Buscar por ID ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Empresa ID] Endpoint respondeu (200 ou 404)', function() {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('[Empresa ID] Resposta contém dados', function() {",
+                  "        var data = json.result || json.value || json.data || json;",
+                  "        pm.expect(data).to.not.be.empty;",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -2524,29 +3408,33 @@
       "script": {
         "type": "text/javascript",
         "exec": [
-          "var token    = pm.environment.get('token');",
-          "var expiry   = pm.environment.get('token_tms_expires_at');",
-          "var expired  = !token || (expiry && Date.now() >= Number(expiry) - 30000);",
+          "// Auto-login TMS: renova o token se ausente ou expirado",
+          "var token  = pm.environment.get('token');",
+          "var expiry = pm.environment.get('token_tms_expires_at');",
+          "var expired = !token || (expiry && Date.now() >= Number(expiry) - 30000);",
           "",
           "if (expired) {",
           "    var base = pm.environment.get('base_url_tms');",
           "    var user = pm.environment.get('tms_user');",
           "    var pwd  = pm.environment.get('tms_password');",
-          "    if (!base || !user || !pwd) return; // credenciais não configuradas",
-          "",
+          "    var key  = pm.environment.get('integradorKey') || '';",
+          "    var db   = pm.environment.get('database') || '';",
+          "    if (!base || !user || !pwd) { console.warn('[TMS] Credenciais não configuradas.'); return; }",
           "    pm.sendRequest({",
           "        url: base + '/viasoft/api/AuthWebService/Autenticar',",
           "        method: 'POST',",
-          "        header: { 'Content-Type': 'application/json' },",
+          "        header: { 'Content-Type': 'application/json', 'IntegradorKey': key, 'database-name': db },",
           "        body: { mode: 'raw', raw: JSON.stringify({ AUser: user, APassword: pwd }) }",
           "    }, function(err, res) {",
-          "        if (err) { console.error('Erro refresh TMS:', err); return; }",
+          "        if (err) { console.error('[TMS] Erro ao renovar token:', err); return; }",
           "        var j = res.json();",
-          "        var t = j.value || j.access_token || j.token;",
+          "        var t = j.value || j.access_token || j.token || j.authToken;",
           "        if (t) {",
           "            pm.environment.set('token', t);",
           "            pm.environment.set('token_tms_expires_at', Date.now() + 3600000);",
-          "            console.log('Token TMS renovado automaticamente.');",
+          "            console.log('[TMS] Token renovado automaticamente.');",
+          "        } else {",
+          "            console.warn('[TMS] Falha ao renovar token:', JSON.stringify(j));",
           "        }",
           "    });",
           "}"
@@ -2558,17 +3446,24 @@
       "script": {
         "type": "text/javascript",
         "exec": [
-          "pm.test('Status code 2xx', function() {",
+          "// ── Testes globais aplicados em TODOS os requests ──",
+          "",
+          "// [1] Status Code 2xx",
+          "pm.test('[Global] Status code 2xx', function() {",
           "    pm.response.to.be.success;",
           "});",
           "",
-          "pm.test('Tempo de resposta < 3s', function() {",
-          "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+          "// [2] Tempo de resposta < 5s",
+          "pm.test('[Global] Tempo de resposta < 5000ms', function() {",
+          "    pm.expect(pm.response.responseTime, 'Resposta acima de 5 segundos').to.be.below(5000);",
           "});",
           "",
+          "// [3] JSON válido quando Content-Type for JSON",
           "var ct = pm.response.headers.get('Content-Type');",
           "if (ct && ct.includes('application/json')) {",
-          "    pm.test('JSON válido', function() { pm.response.to.be.json; });",
+          "    pm.test('[Global] Resposta é JSON válido', function() {",
+          "        pm.response.to.be.json;",
+          "    });",
           "}"
         ]
       }

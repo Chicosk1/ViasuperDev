@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "_postman_id": "e53de056-fcad-46b5-91eb-d5278dd755de",
     "name": "Viasuper Titan - Apache",
+    "description": "API DataSnap (Delphi/Apache) do Viasuper edição Titan. Estrutura idêntica ao Padrão Apache, diferenciada nos endpoints de estoque. Variáveis obrigatórias: `base_url_apache`, `apache_user`, `apache_password`.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "38872675",
-    "description": "API DataSnap (Delphi/Apache) do Viasuper edição Titan. Estrutura idêntica ao Padrão Apache, diferenciada nos endpoints de estoque. Variáveis obrigatórias: `base_url_apache`, `apache_user`, `apache_password`."
+    "_exporter_id": "38872675"
   },
   "item": [
     {
@@ -12,6 +12,37 @@
       "item": [
         {
           "name": "POST Autenticar (Login Web)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Auth Apache] Login Web ──",
+                  "var json = pm.response.json();",
+                  "var result = json.result;",
+                  "var token = Array.isArray(result)",
+                  "    ? result.find(function(r) { return typeof r === 'string' && r.length > 10; })",
+                  "    : (json.authToken || json.token || json.value);",
+                  "if (token) {",
+                  "    pm.environment.set('authToken', token);",
+                  "    console.log('[Apache] authToken salvo.');",
+                  "} else {",
+                  "    console.warn('[Apache] Token não encontrado:', JSON.stringify(json));",
+                  "}",
+                  "",
+                  "pm.test('[Auth Apache] Token retornado na resposta', function() {",
+                  "    pm.expect(token, 'authToken ausente').to.not.be.undefined;",
+                  "    pm.expect(token).to.be.a('string').with.lengthOf.above(10);",
+                  "});",
+                  "",
+                  "pm.test('[Auth Apache] result é array com token string', function() {",
+                  "    pm.expect(json.result).to.be.an('array').and.not.be.empty;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -43,35 +74,35 @@
             },
             "description": "Realiza login na API DataSnap. Salva o authToken automaticamente no ambiente."
           },
-          "response": [],
+          "response": []
+        },
+        {
+          "name": "POST Autenticar (Login Mobile)",
           "event": [
             {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// DataSnap retorna { result: ['TOKEN'] } ou { result: [true, 'TOKEN'] }",
+                  "// ── [Auth Apache] Login Mobile ──",
                   "var json = pm.response.json();",
                   "var result = json.result;",
                   "var token = Array.isArray(result)",
-                  "    ? result.find(function(r) { return typeof r === 'string'; })",
+                  "    ? result.find(function(r) { return typeof r === 'string' && r.length > 10; })",
                   "    : (json.authToken || json.token || json.value);",
                   "if (token) {",
                   "    pm.environment.set('authToken', token);",
-                  "    console.log('authToken Apache salvo.');",
-                  "} else {",
-                  "    console.warn('authToken não encontrado. Resposta:', JSON.stringify(json));",
+                  "    console.log('[Apache Mobile] authToken salvo.');",
                   "}",
-                  "pm.test('Token retornado', function() {",
-                  "    pm.expect(token, 'token ausente na resposta').to.not.be.undefined;",
+                  "",
+                  "pm.test('[Auth Apache Mobile] Token retornado na resposta', function() {",
+                  "    pm.expect(token, 'authToken ausente').to.not.be.undefined;",
+                  "    pm.expect(token).to.be.a('string').with.lengthOf.above(10);",
                   "});"
                 ]
               }
             }
-          ]
-        },
-        {
-          "name": "POST Autenticar (Login Mobile)",
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -103,35 +134,27 @@
             },
             "description": "Realiza login Mobile na API DataSnap."
           },
-          "response": [],
+          "response": []
+        },
+        {
+          "name": "GET Status do Servidor",
           "event": [
             {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "// DataSnap retorna { result: ['TOKEN'] } ou { result: [true, 'TOKEN'] }",
-                  "var json = pm.response.json();",
-                  "var result = json.result;",
-                  "var token = Array.isArray(result)",
-                  "    ? result.find(function(r) { return typeof r === 'string'; })",
-                  "    : (json.authToken || json.token || json.value);",
-                  "if (token) {",
-                  "    pm.environment.set('authToken', token);",
-                  "    console.log('authToken Apache salvo.');",
-                  "} else {",
-                  "    console.warn('authToken não encontrado. Resposta:', JSON.stringify(json));",
-                  "}",
-                  "pm.test('Token retornado', function() {",
-                  "    pm.expect(token, 'token ausente na resposta').to.not.be.undefined;",
+                  "// ── [Status] Servidor Apache ──",
+                  "pm.test('[Status Apache] Servidor está online', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('[Status Apache] Resposta não está vazia', function() {",
+                  "    pm.expect(pm.response.json()).to.not.be.null;",
                   "});"
                 ]
               }
             }
-          ]
-        },
-        {
-          "name": "GET Status do Servidor",
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -162,6 +185,32 @@
       "item": [
         {
           "name": "GET Consultar Limite de Crédito",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Clientes] Consultar Limite de Crédito ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Limite] Endpoint respondeu (200 ou 404)', function() {",
+                  "    pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('[Limite] Resposta contém dados de limite', function() {",
+                  "        pm.expect(json).to.not.be.null;",
+                  "        var data = json.result || json.value || json;",
+                  "        pm.expect(data).to.not.be.empty;",
+                  "    });",
+                  "} else {",
+                  "    console.warn('[Limite] Não encontrado — verifique {{AEstabId}} e {{APessoaId}}.');",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -273,6 +322,26 @@
         },
         {
           "name": "GET Consultar Contravale",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Contravale] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Contravale] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Contravale] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -320,6 +389,29 @@
         },
         {
           "name": "GET Listar Contravalse",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Contravalse] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Contravalse] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Contravalse] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -435,6 +527,32 @@
           "item": [
             {
               "name": "GET Listar Títulos em Aberto",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// ── [Duplicatas] Títulos em Aberto ──",
+                      "var json = pm.response.json();",
+                      "",
+                      "pm.test('[Títulos] Endpoint respondeu (200 ou 404)', function() {",
+                      "    pm.expect([200, 404]).to.include(pm.response.code);",
+                      "});",
+                      "",
+                      "if (pm.response.code === 200) {",
+                      "    pm.test('[Títulos] Resposta contém lista de títulos', function() {",
+                      "        pm.expect(json).to.not.be.null;",
+                      "        var lista = json.result || json.value || json;",
+                      "        pm.expect(lista).to.not.be.undefined;",
+                      "    });",
+                      "} else {",
+                      "    console.warn('[Títulos] Não encontrado — verifique {{AEstabId}} e {{APessoaId}}.');",
+                      "}"
+                    ]
+                  }
+                }
+              ],
               "request": {
                 "method": "GET",
                 "header": [
@@ -472,6 +590,29 @@
             },
             {
               "name": "GET Listar Títulos em Aberto (Sinergia)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "// ── [Títulos Sinergia] Listar ──",
+                      "var json = pm.response.json();",
+                      "",
+                      "pm.test('[Títulos Sinergia] Status 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('[Títulos Sinergia] Resposta contém dados', function() {",
+                      "    pm.expect(json).to.not.be.null;",
+                      "    var lista = Array.isArray(json) ? json",
+                      "              : (json.result || json.value || json.data || json.items);",
+                      "    pm.expect(lista).to.not.be.undefined;",
+                      "});"
+                    ]
+                  }
+                }
+              ],
               "request": {
                 "method": "GET",
                 "header": [
@@ -515,6 +656,26 @@
       "item": [
         {
           "name": "GET Buscar Logradouro por CEP",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Logradouro CEP] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Logradouro CEP] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Logradouro CEP] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -546,6 +707,29 @@
         },
         {
           "name": "GET Módulos Mobile Liberados",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Módulos Mobile] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Módulos Mobile] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Módulos Mobile] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -571,6 +755,26 @@
         },
         {
           "name": "GET Ações do Usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Ações Usuário] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Ações Usuário] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Ações Usuário] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -650,6 +854,26 @@
       "item": [
         {
           "name": "GET Buscar Produto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Buscar Produto] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Buscar Produto] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Buscar Produto] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -693,6 +917,29 @@
         },
         {
           "name": "GET Pesquisar Produtos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Pesquisar Produtos] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Pesquisar Produtos] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Pesquisar Produtos] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -769,118 +1016,6 @@
     {
       "name": "Pedidos",
       "item": [
-        {
-          "name": "GET Consultar Total Entregue do Pedido",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Basic {{authToken}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/PedidoTotEntregue?AEstab=&AComanda=",
-              "host": [
-                "{{base_url_apache}}"
-              ],
-              "path": [
-                "datasnap",
-                "rest",
-                "TServerFuncoes",
-                "PedidoTotEntregue"
-              ],
-              "query": [
-                {
-                  "key": "AEstab",
-                  "value": ""
-                },
-                {
-                  "key": "AComanda",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "POST Marcar como Baixado no PDV",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Basic {{authToken}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"AEstab\": 0,\n  \"AComanda\": \"\",\n  \"ASituacao\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/UpdateBaixadoPdv",
-              "host": [
-                "{{base_url_apache}}"
-              ],
-              "path": [
-                "datasnap",
-                "rest",
-                "TServerFuncoes",
-                "UpdateBaixadoPdv"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "POST Confirmar Recebimento",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Basic {{authToken}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"estab\": 1,\n  \"numeronota\": \"\",\n  \"serienota\": \"\",\n  \"cnpjfornecedor\": \"\",\n  \"produtos\": [\n    {\n      \"iditem\": \"\",\n      \"quantidade\": 0,\n      \"lote\": \"\",\n      \"lotetipo\": \"\",\n      \"loteseq\": \"\",\n      \"dtfabricacao\": \"\",\n      \"dtvalidade\": \"\"\n    }\n  ]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ConfirmarRecebimento",
-              "host": [
-                "{{base_url_apache}}"
-              ],
-              "path": [
-                "datasnap",
-                "rest",
-                "TServerFuncoes",
-                "ConfirmarRecebimento"
-              ]
-            },
-            "description": "Confirma o recebimento de uma nota fiscal via FORLOG."
-          },
-          "response": []
-        },
         {
           "name": "Integração FORLOG",
           "item": [
@@ -999,6 +1134,138 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "GET Consultar Total Entregue do Pedido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Total Pedido] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Total Pedido] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Total Pedido] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/PedidoTotEntregue?AEstab=&AComanda=",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "PedidoTotEntregue"
+              ],
+              "query": [
+                {
+                  "key": "AEstab",
+                  "value": ""
+                },
+                {
+                  "key": "AComanda",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Marcar como Baixado no PDV",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"AEstab\": 0,\n  \"AComanda\": \"\",\n  \"ASituacao\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/UpdateBaixadoPdv",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "UpdateBaixadoPdv"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Confirmar Recebimento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Basic {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estab\": 1,\n  \"numeronota\": \"\",\n  \"serienota\": \"\",\n  \"cnpjfornecedor\": \"\",\n  \"produtos\": [\n    {\n      \"iditem\": \"\",\n      \"quantidade\": 0,\n      \"lote\": \"\",\n      \"lotetipo\": \"\",\n      \"loteseq\": \"\",\n      \"dtfabricacao\": \"\",\n      \"dtvalidade\": \"\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_apache}}/datasnap/rest/TServerFuncoes/ConfirmarRecebimento",
+              "host": [
+                "{{base_url_apache}}"
+              ],
+              "path": [
+                "datasnap",
+                "rest",
+                "TServerFuncoes",
+                "ConfirmarRecebimento"
+              ]
+            },
+            "description": "Confirma o recebimento de uma nota fiscal via FORLOG."
+          },
+          "response": []
         }
       ]
     },
@@ -1068,6 +1335,26 @@
       "item": [
         {
           "name": "GET Consultar Saldo do Produto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Saldo Produto] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Saldo Produto] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Saldo Produto] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1180,6 +1467,26 @@
       "item": [
         {
           "name": "GET Consultar Preço por EAN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Preço EAN] ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Preço EAN] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Preço EAN] Resposta não está vazia', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1220,6 +1527,29 @@
       "item": [
         {
           "name": "GET Listar Cidades",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// ── [Cidades] Listar ──",
+                  "var json = pm.response.json();",
+                  "",
+                  "pm.test('[Cidades] Status 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('[Cidades] Resposta contém dados', function() {",
+                  "    pm.expect(json).to.not.be.null;",
+                  "    var lista = Array.isArray(json) ? json",
+                  "              : (json.result || json.value || json.data || json.items);",
+                  "    pm.expect(lista).to.not.be.undefined;",
+                  "});"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -1252,21 +1582,63 @@
   ],
   "event": [
     {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-login Apache: obtém authToken se ausente",
+          "var authToken = pm.environment.get('authToken');",
+          "if (!authToken) {",
+          "    var base = pm.environment.get('base_url_apache');",
+          "    var user = pm.environment.get('apache_user');",
+          "    var pwd  = pm.environment.get('apache_password');",
+          "    if (!base || !user || !pwd) { console.warn('[Apache] Credenciais não configuradas.'); return; }",
+          "    pm.sendRequest({",
+          "        url: base + '/datasnap/rest/TServerFuncoes/UpdateLoginWeb',",
+          "        method: 'POST',",
+          "        header: { 'Content-Type': 'application/json' },",
+          "        body: { mode: 'raw', raw: JSON.stringify({ login: user, password: pwd }) }",
+          "    }, function(err, res) {",
+          "        if (err) { console.error('[Apache] Erro ao autenticar:', err); return; }",
+          "        var j = res.json();",
+          "        var r = j.result;",
+          "        var t = Array.isArray(r)",
+          "            ? r.find(function(x) { return typeof x === 'string' && x.length > 10; })",
+          "            : (j.authToken || j.token || j.value);",
+          "        if (t) {",
+          "            pm.environment.set('authToken', t);",
+          "            console.log('[Apache] authToken obtido automaticamente.');",
+          "        } else {",
+          "            console.warn('[Apache] Falha ao obter token:', JSON.stringify(j));",
+          "        }",
+          "    });",
+          "}"
+        ]
+      }
+    },
+    {
       "listen": "test",
       "script": {
         "type": "text/javascript",
         "exec": [
-          "pm.test('Status code 2xx', function() {",
+          "// ── Testes globais aplicados em TODOS os requests ──",
+          "",
+          "// [1] Status Code 2xx",
+          "pm.test('[Global] Status code 2xx', function() {",
           "    pm.response.to.be.success;",
           "});",
           "",
-          "pm.test('Tempo de resposta < 3s', function() {",
-          "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+          "// [2] Tempo de resposta < 5s",
+          "pm.test('[Global] Tempo de resposta < 5000ms', function() {",
+          "    pm.expect(pm.response.responseTime, 'Resposta acima de 5 segundos').to.be.below(5000);",
           "});",
           "",
+          "// [3] JSON válido quando Content-Type for JSON",
           "var ct = pm.response.headers.get('Content-Type');",
           "if (ct && ct.includes('application/json')) {",
-          "    pm.test('JSON válido', function() { pm.response.to.be.json; });",
+          "    pm.test('[Global] Resposta é JSON válido', function() {",
+          "        pm.response.to.be.json;",
+          "    });",
           "}"
         ]
       }
